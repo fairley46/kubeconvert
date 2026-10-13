@@ -17,11 +17,11 @@ a governed migration package engineers can review and deploy safely.
 
 This project was formerly Stratosphere.
 
-![KubeConvert demo: billing fixture migration package](docs/assets/kubeconvert-demo.png)
-
-![KubeConvert demo video: `npm run demo` on the billing fixture (~29s)](docs/assets/kubeconvert-demo.gif)
-
-Full recording: [docs/assets/kubeconvert-demo.mp4](docs/assets/kubeconvert-demo.mp4) (~29s).
+<p align="center">
+  <video src="docs/assets/kubeconvert-demo.mp4" width="800" controls muted loop playsinline>
+    <img src="docs/assets/kubeconvert-demo.gif" alt="KubeConvert demo: npm run demo on the billing fixture (~29s)" width="800" />
+  </video>
+</p>
 
 ---
 
