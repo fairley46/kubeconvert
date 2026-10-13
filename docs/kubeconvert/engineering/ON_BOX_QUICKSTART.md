@@ -8,8 +8,8 @@
 VERSION=v0.1.0
 ARCH=linux-x64 # use linux-arm64 on arm hosts
 
-curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/kubeconvert-${ARCH}"
-curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/SHA256SUMS"
+curl -fsSLO "https://github.com/fairley46/kubeconvert/releases/download/${VERSION}/kubeconvert-${ARCH}"
+curl -fsSLO "https://github.com/fairley46/kubeconvert/releases/download/${VERSION}/SHA256SUMS"
 grep "kubeconvert-${ARCH}" SHA256SUMS | sha256sum -c -
 
 chmod +x "kubeconvert-${ARCH}"
