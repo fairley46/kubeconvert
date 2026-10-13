@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/assets/cubeconvert-logo.png" alt="CubeConvert" width="720" />
+  <img src="docs/assets/cubeconvert-logo.svg" alt="CubeConvert" width="720" />
 </p>
 
 <p align="center">
-  <a href="https://github.com/fairley46/cubeconvert/actions/workflows/ci.yml"><img src="https://github.com/fairley46/cubeconvert/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/fairley46/stratosphere/actions/workflows/ci.yml"><img src="https://github.com/fairley46/stratosphere/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" /></a>
 </p>
 
@@ -42,12 +42,13 @@ deploy after sign-off.
 Requires Node.js 22+.
 
 ```bash
-git clone https://github.com/fairley46/cubeconvert.git
-cd cubeconvert
+git clone https://github.com/fairley46/stratosphere.git
+cd stratosphere
 npm install
 npm run build
 npm run test
 ```
+
 
 Generate a full migration package from the committed billing fixture:
 
@@ -75,7 +76,7 @@ npm run cubeconvert -- \
 
 Single-binary install for SSH-first VMs: see
 [On-Box Quickstart](docs/cubeconvert/engineering/ON_BOX_QUICKSTART.md)
-and [GitHub Releases](https://github.com/fairley46/cubeconvert/releases).
+and [GitHub Releases](https://github.com/fairley46/stratosphere/releases).
 
 ---
 
