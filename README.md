@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/fairley46/stratosphere/actions/workflows/ci.yml"><img src="https://github.com/fairley46/stratosphere/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/fairley46/kubeconvert/actions/workflows/ci.yml"><img src="https://github.com/fairley46/kubeconvert/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" /></a>
 </p>
 
@@ -17,11 +17,11 @@ a governed migration package engineers can review and deploy safely.
 
 This project was formerly Stratosphere.
 
-![KubeConvert demo: billing fixture migration package](docs/assets/kubeconvert-demo.png)
-
-![KubeConvert demo video: `npm run demo` on the billing fixture (~29s)](docs/assets/kubeconvert-demo.gif)
-
-Full recording: [docs/assets/kubeconvert-demo.mp4](docs/assets/kubeconvert-demo.mp4) (~29s).
+<p align="center">
+  <video src="docs/assets/kubeconvert-demo.mp4" width="800" controls muted loop playsinline>
+    <img src="docs/assets/kubeconvert-demo.gif" alt="KubeConvert demo: npm run demo on the billing fixture (~29s)" width="800" />
+  </video>
+</p>
 
 ---
 
@@ -42,7 +42,7 @@ deploy after sign-off.
 Requires Node.js 22+.
 
 ```bash
-git clone https://github.com/fairley46/stratosphere.git kubeconvert
+git clone https://github.com/fairley46/kubeconvert.git
 cd kubeconvert
 npm install
 npm run build
@@ -77,7 +77,7 @@ npm run kubeconvert -- \
 
 Single-binary install for SSH-first VMs: see
 [On-Box Quickstart](docs/kubeconvert/engineering/ON_BOX_QUICKSTART.md)
-and [GitHub Releases](https://github.com/fairley46/stratosphere/releases).
+and [GitHub Releases](https://github.com/fairley46/kubeconvert/releases).
 
 ---
 
