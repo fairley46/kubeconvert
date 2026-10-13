@@ -7,7 +7,7 @@ import { buildApplicationMaps } from "./maps.js";
 import { LocalDiscoveryAdapter, SshDiscoveryAdapter, SnapshotDiscoveryAdapter } from "./discovery.js";
 import { exportBundle } from "./export.js";
 import { runRepositoryExport } from "./repository-export.js";
-import { CubeConvertError } from "./errors.js";
+import { KubeConvertError } from "./errors.js";
 import { detectVendorDependencies } from "./vendor.js";
 import type {
   AuditMetadata,
@@ -88,7 +88,7 @@ export async function runMigrationPipeline(request: MigrationRunRequest): Promis
   const strategy = request.strategy ?? "balanced";
   const mode: DiscoveryMode = request.discoveryMode ?? (request.connection ? "ssh" : "snapshot");
   if (mode === "snapshot" && !request.runtimeSnapshot) {
-    throw new CubeConvertError({
+    throw new KubeConvertError({
       code: "INPUT_MISSING",
       message: "runtimeSnapshot is required when discoveryMode is snapshot.",
       hint: "Provide a runtime file or switch discovery mode to local/ssh.",

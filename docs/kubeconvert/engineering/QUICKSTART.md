@@ -1,34 +1,34 @@
-# CubeConvert Quickstart
+# KubeConvert Quickstart
 
-*For engineers getting CubeConvert running in under 10 minutes.*
+*For engineers getting KubeConvert running in under 10 minutes.*
 
-If you are running from source checkout and do not have the release binary on your `PATH`, replace `cubeconvert` below with `npm run cubeconvert --`.
+If you are running from source checkout and do not have the release binary on your `PATH`, replace `kubeconvert` below with `npm run kubeconvert --`.
 
 ## Single binary commands (recommended on VMs)
 
 ```bash
-cubeconvert doctor
-cubeconvert --help
-cubeconvert mcp
+kubeconvert doctor
+kubeconvert --help
+kubeconvert mcp
 ```
 
 For SSH-first install details, see `ON_BOX_QUICKSTART.md`.
 
 ## Generate a migration package from a runtime snapshot
 
-From the `cubeconvert/` directory:
+From the `kubeconvert/` directory:
 
 ```bash
-cubeconvert \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
-  --out-dir artifacts/cubeconvert
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Generate with audit and export planning
 
 ```bash
-cubeconvert \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --initiated-by platform-team \
   --signoff-required-approvers 2 \
   --export-provider github \
@@ -39,14 +39,14 @@ cubeconvert \
 ## Request export execution (policy-gated)
 
 ```bash
-CUBECONVERT_ENABLE_EXPORT_EXECUTION=true GITHUB_TOKEN=*** \
-cubeconvert \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
+KUBECONVERT_ENABLE_EXPORT_EXECUTION=true GITHUB_TOKEN=*** \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --export-provider github \
   --export-owner my-org \
   --export-repo billing-migration \
   --export-auth-mode oauth \
-  --export-branch codex/cubeconvert-migration \
+  --export-branch codex/kubeconvert-migration \
   --export-target-branch main \
   --export-token-env GITHUB_TOKEN \
   --export-api-base-url https://api.github.com \
@@ -57,31 +57,31 @@ cubeconvert \
 ## Run guided intake wizard (plain language)
 
 ```bash
-cubeconvert \
+kubeconvert \
   --wizard \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
-  --out-dir artifacts/cubeconvert
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Generate with business intake + application workspace context
 
 ```bash
-cubeconvert \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --strategy balanced \
-  --intake-file fixtures/cubeconvert/sample-intake.json \
-  --workspace-file fixtures/cubeconvert/sample-workspace.json \
-  --out-dir artifacts/cubeconvert
+  --intake-file fixtures/kubeconvert/sample-intake.json \
+  --workspace-file fixtures/kubeconvert/sample-workspace.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Generate from local VM discovery (no runtime file)
 
 ```bash
-cubeconvert \
+kubeconvert \
   --local-discovery \
   --initiated-by platform-team \
   --signoff-required-approvers 2 \
-  --out-dir artifacts/cubeconvert
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Input validation behavior
@@ -93,29 +93,29 @@ cubeconvert \
 ## Optional: include SSH connection metadata
 
 ```bash
-cubeconvert \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --ssh-host 10.40.8.23 \
   --ssh-user migration-readonly \
   --ssh-port 22 \
-  --out-dir artifacts/cubeconvert
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Print read-only SSH discovery command set
 
 ```bash
-cubeconvert --print-ssh-commands
+kubeconvert --print-ssh-commands
 ```
 
 ## Start MCP server
 
 ```bash
-cubeconvert mcp
+kubeconvert mcp
 ```
 
 ## MCP local-VM flow
 
-Use MCP tool `generate_local_vm_bundle` when CubeConvert MCP is running on the target VM.
+Use MCP tool `generate_local_vm_bundle` when KubeConvert MCP is running on the target VM.
 
 ## Run tests
 

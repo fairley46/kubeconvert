@@ -1,34 +1,34 @@
 # Engineer Onboarding
 
 ## Goal
-Get a new engineer productive with CubeConvert in under 30 minutes.
+Get a new engineer productive with KubeConvert in under 30 minutes.
 
-If you are running from source checkout and the `cubeconvert` executable is not on your `PATH`, use `npm run cubeconvert --` and `npm run mcp:start` equivalents.
+If you are running from source checkout and the `kubeconvert` executable is not on your `PATH`, use `npm run kubeconvert --` and `npm run mcp:start` equivalents.
 
 ## 1) Local Setup
 ```bash
-cd /path/to/cubeconvert
+cd /path/to/kubeconvert
 npm install
 npm run build
 ```
 
 ## 2) Run a Full Example
 ```bash
-cubeconvert \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --strategy balanced \
-  --intake-file fixtures/cubeconvert/sample-intake.json \
-  --workspace-file fixtures/cubeconvert/sample-workspace.json \
+  --intake-file fixtures/kubeconvert/sample-intake.json \
+  --workspace-file fixtures/kubeconvert/sample-workspace.json \
   --signoff-required-approvers 2 \
-  --out-dir artifacts/cubeconvert
+  --out-dir artifacts/kubeconvert
 ```
 
 Optional guided intake (non-technical flow):
 ```bash
-cubeconvert \
+kubeconvert \
   --wizard \
-  --runtime-file fixtures/cubeconvert/sample-runtime.json \
-  --out-dir artifacts/cubeconvert
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## 3) Validate Quality Gates
@@ -63,7 +63,7 @@ npm run test:coverage
 ## 6) MCP Mode (Agent Access)
 Start the MCP server:
 ```bash
-cubeconvert mcp
+kubeconvert mcp
 ```
 
 Primary MCP tools for full flow:
@@ -80,7 +80,7 @@ Primary MCP tools for full flow:
 2. Coverage gate failure:
    - Run `npm run test:coverage` and add branch-targeted tests.
 3. Export execution not allowed:
-   - Confirm `--export-execute` plus `CUBECONVERT_ENABLE_EXPORT_EXECUTION=true` and token env var.
+   - Confirm `--export-execute` plus `KUBECONVERT_ENABLE_EXPORT_EXECUTION=true` and token env var.
    - For enterprise providers, set `--export-auth-mode oauth` and provider base URLs when needed.
 4. Snapshot mode errors:
    - Ensure `--runtime-file` is present and valid JSON schema.

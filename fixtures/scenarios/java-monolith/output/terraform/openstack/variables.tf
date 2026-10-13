@@ -1,6 +1,6 @@
 variable "namespace" {
   type    = string
-  default = "cubeconvert-migration"
+  default = "kubeconvert-migration"
 }
 
 variable "region" {

@@ -18,7 +18,7 @@ test("planRepositoryExport builds github actions", () => {
   const result = planRepositoryExport(bundle, {
     provider: "github",
     owner: "acme",
-    repository: "cubeconvert",
+    repository: "kubeconvert",
     dryRun: false,
   });
 
@@ -36,7 +36,7 @@ test("planRepositoryExport builds gitlab dry-run actions by default", () => {
   const result = planRepositoryExport(bundle, {
     provider: "gitlab",
     owner: "acme",
-    repository: "cubeconvert",
+    repository: "kubeconvert",
   });
 
   assert.equal(result.provider, "gitlab");
@@ -49,13 +49,13 @@ test("planRepositoryExport builds gitlab dry-run actions by default", () => {
 });
 
 test("planRepositoryExport allows execution when policy and token are set", () => {
-  process.env.CUBECONVERT_ENABLE_EXPORT_EXECUTION = "true";
+  process.env.KUBECONVERT_ENABLE_EXPORT_EXECUTION = "true";
   process.env.GITHUB_TOKEN = "token";
 
   const result = planRepositoryExport(bundle, {
     provider: "github",
     owner: "acme",
-    repository: "cubeconvert",
+    repository: "kubeconvert",
     branchName: "codex/ship-it",
     dryRun: false,
   });
@@ -65,7 +65,7 @@ test("planRepositoryExport allows execution when policy and token are set", () =
   assert.equal(result.execution?.executed, true);
   assert.ok(result.execution?.reference?.includes("codex/ship-it"));
 
-  delete process.env.CUBECONVERT_ENABLE_EXPORT_EXECUTION;
+  delete process.env.KUBECONVERT_ENABLE_EXPORT_EXECUTION;
   delete process.env.GITHUB_TOKEN;
 });
 
@@ -73,7 +73,7 @@ test("planRepositoryExport handles unsupported providers defensively", () => {
   const result = planRepositoryExport(bundle, {
     provider: "bitbucket",
     owner: "acme",
-    repository: "cubeconvert",
+    repository: "kubeconvert",
   });
 
   assert.equal(result.provider, "bitbucket");
@@ -88,7 +88,7 @@ test("planRepositoryExport rejects invalid owner and branch inputs", () => {
       planRepositoryExport(bundle, {
         provider: "github",
         owner: "acme org",
-        repository: "cubeconvert",
+        repository: "kubeconvert",
       }),
     (error) => {
       const payload = toErrorPayload(error);
@@ -102,7 +102,7 @@ test("planRepositoryExport rejects invalid owner and branch inputs", () => {
       planRepositoryExport(bundle, {
         provider: "github",
         owner: "acme",
-        repository: "cubeconvert",
+        repository: "kubeconvert",
         branchName: "bad branch",
       }),
     (error) => {
@@ -122,7 +122,7 @@ test("runRepositoryExport handles unsupported provider without execution", async
   const result = await runRepositoryExport("/tmp", bundle, {
     provider: "bitbucket",
     owner: "acme",
-    repository: "cubeconvert",
+    repository: "kubeconvert",
   });
 
   assert.equal(result.provider, "bitbucket");
@@ -131,14 +131,14 @@ test("runRepositoryExport handles unsupported provider without execution", async
 });
 
 test("runRepositoryExport surfaces execution failure without leaking token values", async () => {
-  process.env.CUBECONVERT_ENABLE_EXPORT_EXECUTION = "true";
+  process.env.KUBECONVERT_ENABLE_EXPORT_EXECUTION = "true";
   process.env.GITHUB_TOKEN = "super-secret-value";
 
   const bundleDir = mkdtempSync(join(tmpdir(), "strat-export-fail-"));
   const result = await runRepositoryExport(bundleDir, bundle, {
     provider: "github",
     owner: "acme",
-    repository: "cubeconvert",
+    repository: "kubeconvert",
     dryRun: false,
     providerApiBaseUrl: "https://127.0.0.1:1",
   });
@@ -149,7 +149,7 @@ test("runRepositoryExport surfaces execution failure without leaking token value
   assert.equal(String(result.execution?.reason).includes("super-secret-value"), false);
   assert.ok(result.actions.every((item) => item.status === "failed"));
 
-  delete process.env.CUBECONVERT_ENABLE_EXPORT_EXECUTION;
+  delete process.env.KUBECONVERT_ENABLE_EXPORT_EXECUTION;
   delete process.env.GITHUB_TOKEN;
   rmSync(bundleDir, { recursive: true, force: true });
 });

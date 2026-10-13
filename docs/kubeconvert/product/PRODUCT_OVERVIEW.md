@@ -1,7 +1,7 @@
-# CubeConvert Product Overview
+# KubeConvert Product Overview
 
 ## Product Summary
-CubeConvert is an enterprise migration architect for legacy applications.
+KubeConvert is an enterprise migration architect for legacy applications.
 It interrogates VM behavior, maps how an application works today, and generates a governed Kubernetes-first migration package teams can review and execute safely.
 
 Core message:
@@ -47,7 +47,7 @@ Core message:
    - Intake captures business owner, criticality, downtime and compliance needs, and approval contacts.
    - Workspace captures multi-asset application composition.
 2. Discover runtime:
-   - CubeConvert interrogates system behavior and builds current-state map.
+   - KubeConvert interrogates system behavior and builds current-state map.
 3. Generate migration package:
    - Future-state map, artifacts, validation, and decision reports are created.
 4. Review and approve:
@@ -70,16 +70,16 @@ Core message:
 5. Structured errors and high automated test coverage gates.
 
 ## Current Delivery Status
-CubeConvert is feature-complete for planning and governance-driven migration packaging (CLI + MCP + bundle generation).
+KubeConvert is feature-complete for planning and governance-driven migration packaging (CLI + MCP + bundle generation).
 
 The main gaps are operational validation and integration depth:
 1. Pilot validation against representative enterprise workloads (to tune templates and confidence rules).
 2. Enterprise export hardening (tenant/SSO expectations, scopes, and clearer preflight outcomes).
 3. Optional future execution automation (deploying to clusters) behind strong governance gates.
 
-## How CubeConvert Is Different (And Where It Stops)
+## How KubeConvert Is Different (And Where It Stops)
 
-Many toolchains can produce containers, manifests, or migration scaffolding for supported workloads. CubeConvert’s durable value is making modernization understandable and governable when the people sponsoring the change are not infrastructure specialists.
+Many toolchains can produce containers, manifests, or migration scaffolding for supported workloads. KubeConvert’s durable value is making modernization understandable and governable when the people sponsoring the change are not infrastructure specialists.
 
 What makes it different:
 1. **Non-technical user journey**: guided intake in plain language, “today vs future” maps, option tradeoffs, unknowns, and next-step validation prompts.
@@ -88,4 +88,4 @@ What makes it different:
 4. **Agent-ready surface**: MCP mode lets an enterprise Copilot/agent coordinate complex context (multi-VM, dependencies, vendor constraints) while staying deterministic and auditable.
 
 Where it stops (by design):
-- In this version, CubeConvert generates artifacts and a controlled execution plan. A human (typically the platform team) deploys and operates the migration after sign-off.
+- In this version, KubeConvert generates artifacts and a controlled execution plan. A human (typically the platform team) deploys and operates the migration after sign-off.

@@ -2,16 +2,16 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT_DIR="${1:-$ROOT_DIR/artifacts/cubeconvert-demo}"
+OUT_DIR="${1:-$ROOT_DIR/artifacts/kubeconvert-demo}"
 
-RUNTIME_FILE="$ROOT_DIR/fixtures/cubeconvert/sample-runtime.json"
-INTAKE_FILE="$ROOT_DIR/fixtures/cubeconvert/sample-intake.json"
-WORKSPACE_FILE="$ROOT_DIR/fixtures/cubeconvert/sample-workspace.json"
+RUNTIME_FILE="$ROOT_DIR/fixtures/kubeconvert/sample-runtime.json"
+INTAKE_FILE="$ROOT_DIR/fixtures/kubeconvert/sample-intake.json"
+WORKSPACE_FILE="$ROOT_DIR/fixtures/kubeconvert/sample-workspace.json"
 
-echo "CubeConvert demo starting..."
+echo "KubeConvert demo starting..."
 echo "Output directory: $OUT_DIR"
 
-npm --prefix "$ROOT_DIR" run -s cubeconvert -- \
+npm --prefix "$ROOT_DIR" run -s kubeconvert -- \
   --runtime-file "$RUNTIME_FILE" \
   --strategy balanced \
   --intake-file "$INTAKE_FILE" \

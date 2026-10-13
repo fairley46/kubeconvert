@@ -8,15 +8,15 @@ import { fileURLToPath } from "node:url";
 import { initExecutionWorkflow } from "../packages/engine/dist/index.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const bin = join(root, "apps/bin/dist/cubeconvert.js");
-const runtimeFile = join(root, "fixtures/cubeconvert/sample-runtime.json");
-const intakeFile = join(root, "fixtures/cubeconvert/sample-intake.json");
-const workspaceFile = join(root, "fixtures/cubeconvert/sample-workspace.json");
+const bin = join(root, "apps/bin/dist/kubeconvert.js");
+const runtimeFile = join(root, "fixtures/kubeconvert/sample-runtime.json");
+const intakeFile = join(root, "fixtures/kubeconvert/sample-intake.json");
+const workspaceFile = join(root, "fixtures/kubeconvert/sample-workspace.json");
 
 test("CLI end-to-end: billing fixture produces governed migration package", () => {
   assert.ok(existsSync(bin), "build apps/bin before running e2e (npm run build)");
 
-  const outDir = mkdtempSync(join(tmpdir(), "cubeconvert-e2e-billing-"));
+  const outDir = mkdtempSync(join(tmpdir(), "kubeconvert-e2e-billing-"));
 
   const cli = spawnSync(
     process.execPath,

@@ -120,13 +120,13 @@ test("validateBundle reports missing helm artifacts and empty recommendations", 
 });
 
 test("validateBundleDirectory handles missing roots and non-root dockerfiles", () => {
-  const missingRoot = mkdtempSync(join(tmpdir(), "cubeconvert-missing-"));
+  const missingRoot = mkdtempSync(join(tmpdir(), "kubeconvert-missing-"));
   const missingResult = validateBundleDirectory(join(missingRoot, "does-not-exist"));
   assert.equal(missingResult.readyForHumanReview, false);
   assert.ok(missingResult.findings.some((item) => item.message.includes("No Dockerfiles found")));
   rmSync(missingRoot, { recursive: true, force: true });
 
-  const root = mkdtempSync(join(tmpdir(), "cubeconvert-dir-"));
+  const root = mkdtempSync(join(tmpdir(), "kubeconvert-dir-"));
   mkdirSync(join(root, "helm/templates"), { recursive: true });
   mkdirSync(join(root, "reports"), { recursive: true });
   mkdirSync(join(root, "docker/api"), { recursive: true });

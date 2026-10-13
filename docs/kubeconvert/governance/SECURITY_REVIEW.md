@@ -19,7 +19,7 @@ No direct credential logging paths were identified in normal flows.
 3. Export safety gates
    - Execution requires:
      - `--export-execute`
-     - `CUBECONVERT_ENABLE_EXPORT_EXECUTION=true`
+     - `KUBECONVERT_ENABLE_EXPORT_EXECUTION=true`
      - configured token env var present
 4. Controlled execution model
    - Human review/approval/preflight gates remain enforced before execution states.

@@ -1,4 +1,4 @@
-# CubeConvert Glossary
+# KubeConvert Glossary
 
 Plain-language terms for non-technical application owners.
 
@@ -7,7 +7,7 @@ Plain-language terms for non-technical application owners.
 - Why it matters: Shows what exists now before any change is proposed.
 
 ## Future-State Map
-- Meaning: A picture of how CubeConvert recommends running the app after modernization.
+- Meaning: A picture of how KubeConvert recommends running the app after modernization.
 - Why it matters: Helps compare today vs tomorrow in one view.
 
 ## Readiness Score

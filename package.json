@@ -1,8 +1,8 @@
 {
-  "name": "cubeconvert",
+  "name": "kubeconvert",
   "private": true,
   "version": "0.1.0",
-  "description": "CubeConvert — AI-driven VM to Kubernetes migration architect.",
+  "description": "KubeConvert — AI-driven VM to Kubernetes migration architect.",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -12,12 +12,12 @@
     "test": "npm run build && node --test tests/**/*.test.mjs",
     "test:coverage": "npm run build && node --experimental-test-coverage --test-coverage-include='packages/engine/dist/**/*.js' --test-coverage-exclude='packages/engine/dist/repository-export.js' --test-coverage-lines=99 --test tests/**/*.test.mjs",
     "ci": "npm run test:coverage",
-    "cubeconvert": "npm --workspace @cubeconvert/bin run run --",
-    "mcp:start": "npm --workspace @cubeconvert/bin run mcp",
-    "doctor": "npm --workspace @cubeconvert/bin run doctor --",
-    "binary:build": "npm --workspace @cubeconvert/bin run build:binary",
-    "binary:linux-x64": "npm --workspace @cubeconvert/bin run build:binary:linux-x64",
-    "binary:linux-arm64": "npm --workspace @cubeconvert/bin run build:binary:linux-arm64",
+    "kubeconvert": "npm --workspace @kubeconvert/bin run run --",
+    "mcp:start": "npm --workspace @kubeconvert/bin run mcp",
+    "doctor": "npm --workspace @kubeconvert/bin run doctor --",
+    "binary:build": "npm --workspace @kubeconvert/bin run build:binary",
+    "binary:linux-x64": "npm --workspace @kubeconvert/bin run build:binary:linux-x64",
+    "binary:linux-arm64": "npm --workspace @kubeconvert/bin run build:binary:linux-arm64",
     "demo": "bash scripts/demo.sh"
   },
   "devDependencies": {

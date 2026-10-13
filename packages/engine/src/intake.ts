@@ -1,4 +1,4 @@
-import { CubeConvertError } from "./errors.js";
+import { KubeConvertError } from "./errors.js";
 import type {
   ApplicationWorkspace,
   BusinessCriticality,
@@ -10,7 +10,7 @@ import type {
 
 function asRecord(input: unknown): Record<string, unknown> {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
-    throw new CubeConvertError({
+    throw new KubeConvertError({
       code: "INPUT_INVALID",
       message: "Expected an object payload.",
       hint: "Provide a JSON object with required fields.",
@@ -22,7 +22,7 @@ function asRecord(input: unknown): Record<string, unknown> {
 function readString(record: Record<string, unknown>, key: string): string {
   const value = record[key];
   if (typeof value === "string" && value.trim().length > 0) return value.trim();
-  throw new CubeConvertError({
+  throw new KubeConvertError({
     code: "INPUT_MISSING",
     message: `Missing required field: ${key}`,
     hint: `Provide a non-empty string for "${key}".`,
@@ -33,7 +33,7 @@ function readOptionalString(record: Record<string, unknown>, key: string): strin
   const value = record[key];
   if (value === undefined) return undefined;
   if (typeof value === "string" && value.trim().length > 0) return value.trim();
-  throw new CubeConvertError({
+  throw new KubeConvertError({
     code: "INPUT_INVALID",
     message: `Field "${key}" must be a non-empty string when provided.`,
     hint: `Fix "${key}" in your JSON payload.`,
@@ -43,7 +43,7 @@ function readOptionalString(record: Record<string, unknown>, key: string): strin
 function readStringArray(record: Record<string, unknown>, key: string): string[] {
   const value = record[key];
   if (!Array.isArray(value)) {
-    throw new CubeConvertError({
+    throw new KubeConvertError({
       code: "INPUT_INVALID",
       message: `Field "${key}" must be an array of strings.`,
       hint: `Provide "${key}": ["value-a", "value-b"].`,
@@ -53,7 +53,7 @@ function readStringArray(record: Record<string, unknown>, key: string): string[]
   const out: string[] = [];
   for (const item of value) {
     if (typeof item !== "string" || item.trim().length === 0) {
-      throw new CubeConvertError({
+      throw new KubeConvertError({
         code: "INPUT_INVALID",
         message: `Field "${key}" contains an invalid value.`,
         hint: `All "${key}" entries must be non-empty strings.`,
@@ -67,7 +67,7 @@ function readStringArray(record: Record<string, unknown>, key: string): string[]
 function readBoolean(record: Record<string, unknown>, key: string): boolean {
   const value = record[key];
   if (typeof value === "boolean") return value;
-  throw new CubeConvertError({
+  throw new KubeConvertError({
     code: "INPUT_INVALID",
     message: `Field "${key}" must be true or false.`,
     hint: `Provide a boolean value for "${key}".`,
@@ -77,7 +77,7 @@ function readBoolean(record: Record<string, unknown>, key: string): boolean {
 function readEnum<T extends string>(record: Record<string, unknown>, key: string, allowed: readonly T[]): T {
   const value = record[key];
   if (typeof value !== "string" || !allowed.includes(value as T)) {
-    throw new CubeConvertError({
+    throw new KubeConvertError({
       code: "INPUT_INVALID",
       message: `Field "${key}" must be one of: ${allowed.join(", ")}.`,
       hint: `Update "${key}" to a supported value.`,
@@ -126,7 +126,7 @@ export function validateApplicationWorkspace(input: unknown): ApplicationWorkspa
 
   const assetsRaw = record.assets;
   if (!Array.isArray(assetsRaw) || assetsRaw.length === 0) {
-    throw new CubeConvertError({
+    throw new KubeConvertError({
       code: "INPUT_INVALID",
       message: "Workspace requires at least one asset.",
       hint: 'Provide "assets": [{ "id": "...", "type": "vm", "name": "..." }].',
@@ -135,7 +135,7 @@ export function validateApplicationWorkspace(input: unknown): ApplicationWorkspa
 
   const relationshipsRaw = record.relationships;
   if (!Array.isArray(relationshipsRaw)) {
-    throw new CubeConvertError({
+    throw new KubeConvertError({
       code: "INPUT_INVALID",
       message: 'Field "relationships" must be an array.',
       hint: 'Provide "relationships": [] when there are no edges.',
@@ -148,7 +148,7 @@ export function validateApplicationWorkspace(input: unknown): ApplicationWorkspa
 
   for (const relation of relationships) {
     if (!assetIdSet.has(relation.fromAssetId) || !assetIdSet.has(relation.toAssetId)) {
-      throw new CubeConvertError({
+      throw new KubeConvertError({
         code: "INPUT_INVALID",
         message: "Workspace relationship references unknown asset ids.",
         hint: "Ensure fromAssetId/toAssetId values exist in assets[].id.",
@@ -183,7 +183,7 @@ export function buildExecutiveSummary(input: {
   if (intake?.applicationName) lines.push(`Application: ${intake.applicationName}`);
   if (intake?.businessOwner) lines.push(`Business owner: ${intake.businessOwner}`);
   lines.push("");
-  lines.push("## What CubeConvert Found");
+  lines.push("## What KubeConvert Found");
   lines.push(
     `- ${decomposition.recommendations.length} application component(s): ${deploymentCount} stateless service(s), ${statefulSetCount} stateful service(s), ${cronJobCount} scheduled job(s).`
   );

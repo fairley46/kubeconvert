@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { basename } from "node:path";
 import { promisify } from "node:util";
-import { CubeConvertError } from "./errors.js";
+import { KubeConvertError } from "./errors.js";
 import type {
   CommandExecutionResult,
   DiscoveryAdapter,
@@ -532,7 +532,7 @@ export class SnapshotDiscoveryAdapter implements DiscoveryAdapter {
 
   async collect(request: DiscoveryRequest): Promise<DiscoveryResult> {
     if (!request.runtimeSnapshot) {
-      throw new CubeConvertError({
+      throw new KubeConvertError({
         code: "INPUT_MISSING",
         message: "runtimeSnapshot is required for snapshot discovery mode.",
         hint: "Provide --runtime-file or switch to --local-discovery / SSH mode.",
@@ -563,7 +563,7 @@ export class SshDiscoveryAdapter implements DiscoveryAdapter {
 
   async collect(request: DiscoveryRequest): Promise<DiscoveryResult> {
     if (!request.connection) {
-      throw new CubeConvertError({
+      throw new KubeConvertError({
         code: "INPUT_MISSING",
         message: "SSH discovery requires connection details.",
         hint: "Provide ssh host and user or switch to snapshot/local discovery mode.",
@@ -585,7 +585,7 @@ export class SshDiscoveryAdapter implements DiscoveryAdapter {
     const mergedRuntime = mergeFallbackSnapshot(parsedRuntime, request.runtimeSnapshot);
 
     if (mergedRuntime.processes.length === 0) {
-      throw new CubeConvertError({
+      throw new KubeConvertError({
         code: "DISCOVERY_NO_PROCESS_DATA",
         message: "SSH discovery collected no process data.",
         hint: "Ensure the SSH user can run ps/ss/lsof, then retry. You can also provide a runtime snapshot as fallback.",
@@ -627,7 +627,7 @@ export class LocalDiscoveryAdapter implements DiscoveryAdapter {
     const mergedRuntime = mergeFallbackSnapshot(parsedRuntime, request.runtimeSnapshot);
 
     if (mergedRuntime.processes.length === 0) {
-      throw new CubeConvertError({
+      throw new KubeConvertError({
         code: "DISCOVERY_NO_PROCESS_DATA",
         message: "Local discovery collected no process data.",
         hint: "Run with an account that can execute ps/ss/lsof or provide a runtime snapshot fallback file.",

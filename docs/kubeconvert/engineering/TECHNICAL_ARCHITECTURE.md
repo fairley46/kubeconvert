@@ -1,8 +1,8 @@
 # Technical Architecture
 
-This repo ships CubeConvert as:
+This repo ships KubeConvert as:
 
-- A single executable wrapper (`apps/bin`) exposing `cubeconvert`, `cubeconvert mcp`, and `cubeconvert doctor`
+- A single executable wrapper (`apps/bin`) exposing `kubeconvert`, `kubeconvert mcp`, and `kubeconvert doctor`
 - A standalone CLI (`apps/cli`)
 - A local MCP server over stdio (`apps/mcp`) for agent workflows (Claude Desktop, Opencode, etc.)
 - An in-process engine library (`packages/engine`) used by both
@@ -23,7 +23,7 @@ There is no Web UI or HTTP API in this version.
 ## High-Level Flow
 
 ```text
-[cubeconvert binary]
+[kubeconvert binary]
   |       \
   |        \-- [doctor]
   v
@@ -31,7 +31,7 @@ There is no Web UI or HTTP API in this version.
   |                                 |
   +--------------+------------------+
                  v
-          [@cubeconvert/engine]
+          [@kubeconvert/engine]
                  |
                  | 1) Validate inputs (intake/workspace/targets)
                  | 2) Discovery (runtime file | local | SSH)
@@ -47,7 +47,7 @@ There is no Web UI or HTTP API in this version.
 Key constraint:
 
 - The output is "ready for review and deployment by humans".
-- Execution workflow artifacts exist (blue/green plan, approvals, preflight checks), but CubeConvert does not mutate Kubernetes clusters directly in this version.
+- Execution workflow artifacts exist (blue/green plan, approvals, preflight checks), but KubeConvert does not mutate Kubernetes clusters directly in this version.
 
 ---
 
@@ -128,7 +128,7 @@ Reports are designed to be readable by both engineers and non-technical app owne
 
 ### 5) Export: Plan vs Execute
 
-CubeConvert supports:
+KubeConvert supports:
 
 - Export planning output (always available)
 - Export execution (optional, explicitly policy-gated)
@@ -136,7 +136,7 @@ CubeConvert supports:
 Export execution requires both:
 
 - `--export-execute`
-- `CUBECONVERT_ENABLE_EXPORT_EXECUTION=true` (environment gate)
+- `KUBECONVERT_ENABLE_EXPORT_EXECUTION=true` (environment gate)
 
 Provider integration targets:
 

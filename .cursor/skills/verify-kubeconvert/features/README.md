@@ -1,4 +1,4 @@
-# CubeConvert verification map
+# KubeConvert verification map
 
 User-facing CLI behaviors to prove against a real build. Launch with `npm install && npm run build` first. Prefer disposable `--out-dir` under `/tmp`.
 

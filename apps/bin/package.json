@@ -1,26 +1,26 @@
 {
-  "name": "@cubeconvert/bin",
+  "name": "@kubeconvert/bin",
   "version": "0.1.0",
   "type": "module",
   "private": true,
   "bin": {
-    "cubeconvert": "dist/cubeconvert.js"
+    "kubeconvert": "dist/kubeconvert.js"
   },
-  "main": "dist/cubeconvert.js",
-  "types": "dist/cubeconvert.d.ts",
+  "main": "dist/kubeconvert.js",
+  "types": "dist/kubeconvert.d.ts",
   "scripts": {
     "build": "tsc -b",
-    "run": "npm run build && node dist/cubeconvert.js",
-    "mcp": "npm run build && node dist/cubeconvert.js mcp",
-    "doctor": "npm run build && node dist/cubeconvert.js doctor",
-    "build:binary:linux-x64": "npm run build && npx @yao-pkg/pkg dist/cubeconvert.js --target node20-linux-x64 --output ../../release/cubeconvert-linux-x64",
-    "build:binary:linux-arm64": "npm run build && npx @yao-pkg/pkg dist/cubeconvert.js --target node20-linux-arm64 --output ../../release/cubeconvert-linux-arm64",
-    "build:binary": "npm run build:binary:linux-x64 && npm run build:binary:linux-arm64 && (cd ../../release && shasum -a 256 cubeconvert-linux-* > SHA256SUMS)"
+    "run": "npm run build && node dist/kubeconvert.js",
+    "mcp": "npm run build && node dist/kubeconvert.js mcp",
+    "doctor": "npm run build && node dist/kubeconvert.js doctor",
+    "build:binary:linux-x64": "npm run build && npx @yao-pkg/pkg dist/kubeconvert.js --target node20-linux-x64 --output ../../release/kubeconvert-linux-x64",
+    "build:binary:linux-arm64": "npm run build && npx @yao-pkg/pkg dist/kubeconvert.js --target node20-linux-arm64 --output ../../release/kubeconvert-linux-arm64",
+    "build:binary": "npm run build:binary:linux-x64 && npm run build:binary:linux-arm64 && (cd ../../release && shasum -a 256 kubeconvert-linux-* > SHA256SUMS)"
   },
   "dependencies": {
-    "@cubeconvert/cli": "0.1.0",
-    "@cubeconvert/engine": "0.1.0",
-    "@cubeconvert/mcp": "0.1.0"
+    "@kubeconvert/cli": "0.1.0",
+    "@kubeconvert/engine": "0.1.0",
+    "@kubeconvert/mcp": "0.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.13.10"

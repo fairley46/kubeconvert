@@ -43,7 +43,7 @@ test("validateBundle enforces probes and human signoff requirement", () => {
 });
 
 test("validateBundleDirectory detects missing critical files", () => {
-  const root = mkdtempSync(join(tmpdir(), "cubeconvert-bundle-"));
+  const root = mkdtempSync(join(tmpdir(), "kubeconvert-bundle-"));
   mkdirSync(join(root, "helm/templates"), { recursive: true });
   mkdirSync(join(root, "reports"), { recursive: true });
 

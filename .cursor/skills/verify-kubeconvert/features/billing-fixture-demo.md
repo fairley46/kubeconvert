@@ -1,6 +1,6 @@
 # Billing fixture migration package
 
-Runs CubeConvert against the committed billing VM fixture with intake, workspace, and a dry-run GitHub export plan, then checks the governed bundle.
+Runs KubeConvert against the committed billing VM fixture with intake, workspace, and a dry-run GitHub export plan, then checks the governed bundle.
 
 ## Sub-features
 
@@ -11,7 +11,7 @@ Runs CubeConvert against the committed billing VM fixture with intake, workspace
 
 ## How to get to it (user POV)
 
-1. From repo root after build, run `npm run cubeconvert --` with the sample runtime, intake, and workspace fixtures.
+1. From repo root after build, run `npm run kubeconvert --` with the sample runtime, intake, and workspace fixtures.
 2. Open `$OUT_DIR/reports/executive-summary.md`.
 
 ## Driving it with shell
