@@ -42,12 +42,13 @@ deploy after sign-off.
 Requires Node.js 22+.
 
 ```bash
-git clone https://github.com/fairley46/stratosphere.git
-cd stratosphere
+git clone https://github.com/fairley46/stratosphere.git kubeconvert
+cd kubeconvert
 npm install
 npm run build
 npm run test
 ```
+
 
 
 Generate a full migration package from the committed billing fixture:
