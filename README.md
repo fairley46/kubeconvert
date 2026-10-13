@@ -17,6 +17,13 @@ a governed migration package engineers can review and deploy safely.
 
 ![Stratosphere demo: billing fixture migration package](docs/assets/stratosphere-demo.png)
 
+![Stratosphere demo video: `npm run demo` on the billing fixture (~29s)](docs/assets/stratosphere-demo.gif)
+
+<video src="docs/assets/stratosphere-demo.mp4" controls width="720">
+  Your browser does not support the video tag. See
+  <a href="docs/assets/stratosphere-demo.mp4">docs/assets/stratosphere-demo.mp4</a>.
+</video>
+
 ---
 
 ## Why it exists
