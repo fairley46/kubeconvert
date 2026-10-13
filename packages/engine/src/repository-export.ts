@@ -461,10 +461,3 @@ export async function runRepositoryExport(
   }
 }
 
-export const __repositoryExportTestables = {
-  validateRepositoryRequest,
-  desiredBranchName,
-  targetBranchName,
-  defaultApiBaseUrl,
-  defaultWebBaseUrl,
-};
