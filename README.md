@@ -2,35 +2,74 @@
   <img src="docs/assets/stratosphere-logo.png" alt="Stratosphere" width="720" />
 </p>
 
+<p align="center">
+  <a href="https://github.com/fairley46/stratosphere/actions/workflows/ci.yml"><img src="https://github.com/fairley46/stratosphere/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" /></a>
+</p>
+
 # Stratosphere
 
 **Interrogate. Explain. Accelerate.**
 
 Stratosphere is a Kubernetes-first migration architect for legacy enterprise applications.
 It observes how a VM actually behaves, explains what it found in plain language, and produces
-a governed migration package engineers can review and deploy safely — without guessing.
+a governed migration package engineers can review and deploy safely.
+
+![Stratosphere demo: billing fixture migration package](docs/assets/stratosphere-demo.png)
 
 ---
 
-## What it solves
+## Why it exists
 
-Enterprise VMs accumulate years of undocumented runtime behavior. Modernizing them by hand
-means weeks of interviews, stale wikis, and high-risk guesswork. Stratosphere replaces that
-by capturing live runtime evidence, decomposing it into deployable workloads, and producing a
-complete Kubernetes migration package with review and approval gates before anything changes.
+Enterprise VMs accumulate years of undocumented runtime behavior. Hand modernization means
+stale wikis, interviews, and high-risk guesswork. Stratosphere captures live runtime evidence,
+decomposes it into deployable workloads, and emits a complete Kubernetes migration package
+with review and approval gates before anything changes.
+
+It is not click-to-migrate. v1 produces artifacts and an execution plan that platform teams
+deploy after sign-off.
 
 ---
 
-## How it fits with existing tools
+## Quickstart (fresh clone)
 
-Cloud and vendor toolchains can already generate containers or migration assets for many stacks. Stratosphere is the layer that makes modernization usable and governable for teams who do not live in infrastructure every day:
+Requires Node.js 22+.
 
-- **Decision and communication first**: plain-language intake, current-state map, future-state options, and “what to validate next”.
-- **Evidence-based recommendations**: confidence + unknowns + rationale for why something is a `Deployment`, `StatefulSet`, or `CronJob`.
-- **Governance built-in**: review, approvals, preflight checks, and a blue/green cutover plan that change boards can audit.
-- **Agent-accessible**: MCP tools let an enterprise Copilot/agent drive the workflow while keeping outputs deterministic and reviewable.
+```bash
+git clone https://github.com/fairley46/stratosphere.git
+cd stratosphere
+npm install
+npm run build
+npm run test
+```
 
-Stratosphere is not “click-to-migrate” in v1. It produces artifacts and an execution plan that humans (typically platform teams) deploy after sign-off.
+Generate a full migration package from the committed billing fixture:
+
+```bash
+npm run demo
+```
+
+Output lands in `artifacts/stratosphere-demo/`. Start with
+`reports/executive-summary.md`, then the current and future application maps.
+
+Equivalent explicit command:
+
+```bash
+npm run stratosphere -- \
+  --runtime-file fixtures/stratosphere/sample-runtime.json \
+  --strategy balanced \
+  --intake-file fixtures/stratosphere/sample-intake.json \
+  --workspace-file fixtures/stratosphere/sample-workspace.json \
+  --signoff-required-approvers 2 \
+  --export-provider github \
+  --export-owner acme-enterprise \
+  --export-repo billing-modernization \
+  --out-dir artifacts/my-migration
+```
+
+Single-binary install for SSH-first VMs: see
+[On-Box Quickstart](docs/stratosphere/engineering/ON_BOX_QUICKSTART.md)
+and [GitHub Releases](https://github.com/fairley46/stratosphere/releases).
 
 ---
 
@@ -38,10 +77,10 @@ Stratosphere is not “click-to-migrate” in v1. It produces artifacts and an e
 
 | Artifact | Description |
 |---|---|
-| `Dockerfile` per workload | Minimal, layered, ready-to-build |
+| `Dockerfile` per workload | Minimal, layered, ready to build |
 | `helm/` chart | Values, templates, secrets scaffold |
 | `terraform/` scaffold | Namespace, RBAC, storage provisioning |
-| `reports/migration-summary.md` | Plain-language overview for stakeholders |
+| `reports/migration-summary.md` | Plain-language overview |
 | `reports/executive-summary.md` | Decision-ready brief for app owners |
 | `reports/readiness.{json,md}` | Readiness score, blockers, confidence |
 | `reports/business-impact.{json,md}` | Customer, security, and effort translation |
@@ -52,95 +91,76 @@ Stratosphere is not “click-to-migrate” in v1. It produces artifacts and an e
 
 ---
 
-## Single-binary install (on a VM)
+## Architecture
 
-For SSH-first environments, use the Linux executable from [GitHub Releases](https://github.com/fairley46/stratosphere/releases).
-
-```bash
-VERSION=v0.1.0
-ARCH=linux-x64 # or linux-arm64
-
-curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/stratosphere-${ARCH}"
-curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/SHA256SUMS"
-grep "stratosphere-${ARCH}" SHA256SUMS | sha256sum -c -
-
-chmod +x "stratosphere-${ARCH}"
-mv "stratosphere-${ARCH}" stratosphere
-
-./stratosphere doctor
-./stratosphere mcp
+```text
+[stratosphere binary]
+  |       \
+  |        \-- [doctor]
+  v
+[CLI]                       [MCP Server (stdio)]
+  |                                 |
+  +--------------+------------------+
+                 v
+          [@stratosphere/engine]
+                 |
+                 | discovery -> decompose -> artifacts + reports
+                 v
+      [Bundle: docker/ helm/ terraform/ reports/]
 ```
 
-Full on-box flow: `docs/stratosphere/engineering/ON_BOX_QUICKSTART.md`.
+- `apps/bin`: single executable wrapper (`stratosphere`, `stratosphere mcp`, `stratosphere doctor`)
+- `apps/cli`: non-interactive CLI and prompt-driven `--wizard`
+- `apps/mcp`: stdio MCP server for agent hosts
+- `packages/engine`: deterministic migration engine used by CLI and MCP
 
-If you are running from this source workspace instead of a release binary, use:
-
-```bash
-npm run stratosphere -- --help
-```
-
----
-
-## How to run it
-
-**From a runtime snapshot file:**
-```bash
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
-  --out-dir artifacts/my-migration
-```
-
-**From SSH (live VM discovery):**
-```bash
-stratosphere \
-  --ssh-host 10.0.1.42 --ssh-user deploy \
-  --intake-file my-intake.json \
-  --out-dir artifacts/my-migration
-```
-
-**Guided wizard (no JSON prep needed):**
-```bash
-stratosphere \
-  --wizard \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
-  --out-dir artifacts/my-migration
-```
+Details: [Technical Architecture](docs/stratosphere/engineering/TECHNICAL_ARCHITECTURE.md).
 
 ---
 
 ## Ways to use it
 
-Stratosphere has one engine with two main interactive entrypoints:
+1. **MCP** — `npm run mcp:start` (or `stratosphere mcp`) and drive the workflow from an agent host.
+2. **CLI wizard** — `stratosphere --wizard --runtime-file …` for plain-language prompts in the terminal.
+3. **CLI** — `stratosphere --help` for snapshot files, local discovery, or live SSH.
 
-1. **MCP (recommended for non-infra users)** — Start `stratosphere mcp` and drive the workflow from your enterprise agent host (Opencode, Claude Desktop, etc.). The agent asks the questions; Stratosphere generates the bundle.
-2. **Interactive terminal wizard (lightweight TUI)** — Run `stratosphere --wizard ...` to answer plain-language questions directly in the terminal. This is a prompt-driven terminal UI, not a full-screen TUI.
+---
 
-**CLI (non-interactive)** — Run `stratosphere --help` for all flags. Accepts snapshot files, local discovery, or live SSH. Optional: `--strategy`, `--intake-file`, `--workspace-file`, `--export-provider`. See `docs/stratosphere/engineering/QUICKSTART.md`.
+## Status
 
-For workspace development, `npm run mcp:start` and `npm run stratosphere -- ...` still work.
+v0.1.0 ships CLI + MCP, snapshot/local/SSH discovery, governed migration bundles, and
+planning-only blue/green cutover artifacts.
+
+Not in this version: Web UI, HTTP API, direct cluster deploy, or full-screen TUI.
+
+Roadmap: [Backlog](docs/stratosphere/product/BACKLOG.md).
 
 ---
 
 ## Documentation
 
 **Engineers**
-- [Quickstart](docs/stratosphere/engineering/QUICKSTART.md) — install, run, extend
-- [On-Box Quickstart](docs/stratosphere/engineering/ON_BOX_QUICKSTART.md) — SSH-first install and MCP flow
-- [Engineer Onboarding](docs/stratosphere/engineering/ENGINEER_ONBOARDING.md) — architecture, CLI, MCP, tests
-- [Technical Architecture](docs/stratosphere/engineering/TECHNICAL_ARCHITECTURE.md) — package layout, engine internals
+- [Quickstart](docs/stratosphere/engineering/QUICKSTART.md)
+- [On-Box Quickstart](docs/stratosphere/engineering/ON_BOX_QUICKSTART.md)
+- [Engineer Onboarding](docs/stratosphere/engineering/ENGINEER_ONBOARDING.md)
+- [Technical Architecture](docs/stratosphere/engineering/TECHNICAL_ARCHITECTURE.md)
+- [Demo Runbook](docs/stratosphere/engineering/DEMO_RUNBOOK.md)
 
 **Stakeholders**
-- [Product Overview](docs/stratosphere/product/PRODUCT_OVERVIEW.md) — what it is, who it serves, what it outputs
-- [Pilot Execution Plan](docs/stratosphere/product/PILOT_EXECUTION_PLAN.md) — how to validate with real workloads
-- [Backlog](docs/stratosphere/product/BACKLOG.md) — roadmap and status
+- [Product Overview](docs/stratosphere/product/PRODUCT_OVERVIEW.md)
+- [Pilot Execution Plan](docs/stratosphere/product/PILOT_EXECUTION_PLAN.md)
+- [Backlog](docs/stratosphere/product/BACKLOG.md)
 
-**Enterprise / Governance**
-- [Execution Workflow Spec](docs/stratosphere/governance/EXECUTION_WORKFLOW_SPEC.md) — review → approval → preflight → execute
-- [Enterprise Readiness](docs/stratosphere/governance/ENTERPRISE_READINESS.md) — rollout expectations
-- [Security Review](docs/stratosphere/governance/SECURITY_REVIEW.md) — hardening summary and residual risks
+**Governance**
+- [Execution Workflow Spec](docs/stratosphere/governance/EXECUTION_WORKFLOW_SPEC.md)
+- [Enterprise Readiness](docs/stratosphere/governance/ENTERPRISE_READINESS.md)
+- [Security Review](docs/stratosphere/governance/SECURITY_REVIEW.md)
 
-**Demo**
-- [Demo Runbook](docs/stratosphere/engineering/DEMO_RUNBOOK.md) — 12-15 minute walkthrough
+---
+
+## License
+
+MIT. See [LICENSE](LICENSE).
 
 ---
 

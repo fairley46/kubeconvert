@@ -7,7 +7,7 @@ If you are running from source checkout and the `stratosphere` executable is not
 
 ## 1) Local Setup
 ```bash
-cd /Users/bradfairley/Documents/Playground/stratosphere
+cd /path/to/stratosphere
 npm install
 npm run build
 ```
