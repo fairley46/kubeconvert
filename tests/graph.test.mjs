@@ -94,3 +94,43 @@ test("buildVmDnaGraph skips unmatched connections/jobs and de-duplicates nodes",
   assert.ok(!graph.nodes.some((node) => node.type === "source-repo"));
   assert.equal(graph.nodes.filter((node) => node.id === "port:9000").length, 1);
 });
+
+function discoveryForHost(hostname) {
+  return {
+    runtime: {
+      host: { hostname, os: "linux", distro: "Rocky", ip: "10.0.0.9" },
+      processes: [],
+      connections: [],
+      scheduledJobs: [],
+    },
+    evidence: {
+      collector: "snapshot",
+      commands: [],
+      warnings: [],
+      collectedAt: "2026-01-01T00:00:00.000Z",
+      commandResults: [],
+    },
+  };
+}
+
+function hostNodeId(hostname) {
+  const graph = buildVmDnaGraph("mig-slug", discoveryForHost(hostname));
+  return graph.nodes.find((node) => node.type === "host").id;
+}
+
+test("buildVmDnaGraph collapses hostname runs into a 64-character slug", () => {
+  assert.equal(hostNodeId("Foo---Bar!!!"), "host:foo-bar");
+  assert.equal(hostNodeId("---Foo---Bar---"), "host:foo-bar");
+  assert.equal(hostNodeId("---"), "host:");
+  assert.equal(hostNodeId("A".repeat(70)), `host:${"a".repeat(64)}`);
+  assert.equal(hostNodeId("a!".repeat(40)), `host:${"a-".repeat(32)}`);
+});
+
+test("buildVmDnaGraph slugs a long non-prefix separator run within 500ms", () => {
+  const hostname = `a${"-".repeat(80_000)}b`;
+  const start = performance.now();
+  const id = hostNodeId(hostname);
+  const elapsed = performance.now() - start;
+  assert.equal(id, "host:a-b");
+  assert.ok(elapsed < 500, `slug elapsed ${elapsed}ms`);
+});

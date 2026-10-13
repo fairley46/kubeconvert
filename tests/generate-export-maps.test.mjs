@@ -197,3 +197,33 @@ test("buildApplicationMaps and exportBundle write expected map and signoff outpu
 
   rmSync(outDir, { recursive: true, force: true });
 });
+
+function mermaidForHost(hostname) {
+  const discovery = {
+    runtime: {
+      host: { hostname, os: "linux" },
+      processes: [],
+      connections: [],
+      scheduledJobs: [],
+    },
+  };
+  const maps = buildApplicationMaps({ nodes: [], edges: [] }, discovery, { recommendations: [], blockers: [] });
+  return maps.currentState.mermaid;
+}
+
+test("buildApplicationMaps collapses mermaid ids and falls back to node", () => {
+  assert.match(mermaidForHost("Foo---Bar!!!"), /^  host_foo_bar\[/m);
+  assert.match(mermaidForHost("---Foo---Bar---"), /^  host_foo_bar\[/m);
+  assert.match(mermaidForHost("---"), /^  host_node\[/m);
+  assert.match(mermaidForHost("A".repeat(70)), new RegExp(`^  host_${"a".repeat(64)}\\[`, "m"));
+  assert.match(mermaidForHost("a!".repeat(40)), new RegExp(`^  host_${"a_".repeat(32)}\\[`, "m"));
+});
+
+test("buildApplicationMaps ids a long non-prefix separator run within 500ms", () => {
+  const hostname = `a${"_".repeat(80_000)}b`;
+  const start = performance.now();
+  const mermaid = mermaidForHost(hostname);
+  const elapsed = performance.now() - start;
+  assert.match(mermaid, /^  host_a_b\[/m);
+  assert.ok(elapsed < 500, `mermaid id elapsed ${elapsed}ms`);
+});
