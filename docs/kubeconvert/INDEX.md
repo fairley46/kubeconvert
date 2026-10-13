@@ -1,4 +1,4 @@
-# Stratosphere Docs
+# KubeConvert Docs
 
 > Interrogate. Explain. Accelerate.
 
@@ -21,7 +21,7 @@ Use this as your navigation hub. Pick your audience below.
 
 | Doc | What it covers |
 |---|---|
-| [Product Overview](product/PRODUCT_OVERVIEW.md) | What Stratosphere is, who it serves, what it outputs |
+| [Product Overview](product/PRODUCT_OVERVIEW.md) | What KubeConvert is, who it serves, what it outputs |
 | [Pilot Execution Plan](product/PILOT_EXECUTION_PLAN.md) | How to validate against real enterprise workloads |
 | [PRD](product/PRD.md) | Product requirements and scope boundaries |
 | [Backlog](product/BACKLOG.md) | Roadmap, priorities, and open work |

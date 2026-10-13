@@ -17,7 +17,7 @@ const DEFAULT_GLOSSARY: GlossaryEntry[] = [
   },
   {
     term: "Future-State Map",
-    plainMeaning: "A picture of how Stratosphere recommends running the app after modernization.",
+    plainMeaning: "A picture of how KubeConvert recommends running the app after modernization.",
     whyItMatters: "Helps compare today vs tomorrow in one view.",
   },
   {
@@ -61,7 +61,7 @@ export function buildGlossaryPack(): GlossaryPack {
 
 export function renderGlossaryMarkdown(pack: GlossaryPack): string {
   const lines: string[] = [];
-  lines.push("# Stratosphere Glossary");
+  lines.push("# KubeConvert Glossary");
   lines.push("");
   lines.push("Plain-language terms for non-technical application owners.");
   lines.push("");

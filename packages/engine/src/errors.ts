@@ -1,4 +1,4 @@
-export type StratosphereErrorCode =
+export type KubeConvertErrorCode =
   | "INPUT_INVALID"
   | "INPUT_MISSING"
   | "INPUT_CONFLICT"
@@ -8,15 +8,15 @@ export type StratosphereErrorCode =
   | "FILE_READ_FAILED"
   | "JSON_PARSE_FAILED";
 
-export type StratosphereErrorPayload = {
-  code: StratosphereErrorCode;
+export type KubeConvertErrorPayload = {
+  code: KubeConvertErrorCode;
   message: string;
   hint?: string;
   details?: Record<string, unknown>;
 };
 
 export type UserFacingError = {
-  code: StratosphereErrorCode;
+  code: KubeConvertErrorCode;
   title: string;
   message: string;
   hint: string;
@@ -25,14 +25,14 @@ export type UserFacingError = {
   details?: Record<string, unknown>;
 };
 
-export class StratosphereError extends Error {
-  readonly code: StratosphereErrorCode;
+export class KubeConvertError extends Error {
+  readonly code: KubeConvertErrorCode;
   readonly hint?: string;
   readonly details?: Record<string, unknown>;
 
-  constructor(payload: StratosphereErrorPayload) {
+  constructor(payload: KubeConvertErrorPayload) {
     super(payload.message);
-    this.name = "StratosphereError";
+    this.name = "KubeConvertError";
     this.code = payload.code;
     this.hint = payload.hint;
     this.details = payload.details;
@@ -42,18 +42,18 @@ export class StratosphereError extends Error {
 const SENSITIVE_KEY_PATTERN = /(token|secret|password|authorization|privatekey|api[_-]?key)/i;
 const TOKEN_LIKE_VALUE_PATTERN = /(gh[pousr]_[a-zA-Z0-9_]+|glpat-[a-zA-Z0-9_-]+)/g;
 
-const CODE_TITLES: Record<StratosphereErrorCode, string> = {
+const CODE_TITLES: Record<KubeConvertErrorCode, string> = {
   INPUT_INVALID: "Some information is in an invalid format.",
   INPUT_MISSING: "Required information is missing.",
   INPUT_CONFLICT: "Two selected options conflict with each other.",
   DISCOVERY_FAILED: "Runtime discovery could not complete.",
-  DISCOVERY_NO_PROCESS_DATA: "Stratosphere could not see running application processes.",
-  PIPELINE_FAILED: "Stratosphere could not complete this migration run.",
+  DISCOVERY_NO_PROCESS_DATA: "KubeConvert could not see running application processes.",
+  PIPELINE_FAILED: "KubeConvert could not complete this migration run.",
   FILE_READ_FAILED: "A required file could not be read.",
   JSON_PARSE_FAILED: "A JSON input file is malformed.",
 };
 
-const CODE_HINTS: Record<StratosphereErrorCode, string> = {
+const CODE_HINTS: Record<KubeConvertErrorCode, string> = {
   INPUT_INVALID: "Fix the highlighted input and retry. If unsure, use the guided wizard mode.",
   INPUT_MISSING: "Provide the missing input and run again. The wizard can collect this step-by-step.",
   INPUT_CONFLICT: "Remove conflicting flags or use one discovery mode at a time.",
@@ -64,7 +64,7 @@ const CODE_HINTS: Record<StratosphereErrorCode, string> = {
   JSON_PARSE_FAILED: "Fix JSON syntax and required fields, then retry.",
 };
 
-const CODE_STEPS: Record<StratosphereErrorCode, string[]> = {
+const CODE_STEPS: Record<KubeConvertErrorCode, string[]> = {
   INPUT_INVALID: ["Correct the invalid field value.", "Re-run the command or MCP tool.", "Use `--wizard` for guided setup."],
   INPUT_MISSING: ["Provide the missing input.", "Re-run the command or MCP tool.", "Use `--wizard` if you prefer prompts."],
   INPUT_CONFLICT: ["Remove one of the conflicting options.", "Re-run with a single mode/configuration."],
@@ -108,10 +108,10 @@ export function sanitizeErrorDetails(details?: Record<string, unknown>): Record<
   return sanitizeUnknown(details) as Record<string, unknown>;
 }
 
-export function toErrorPayload(error: unknown): StratosphereErrorPayload {
+export function toErrorPayload(error: unknown): KubeConvertErrorPayload {
   const fallbackHint = CODE_HINTS.PIPELINE_FAILED;
 
-  if (error instanceof StratosphereError) {
+  if (error instanceof KubeConvertError) {
     return {
       code: error.code,
       message: sanitizeText(error.message),

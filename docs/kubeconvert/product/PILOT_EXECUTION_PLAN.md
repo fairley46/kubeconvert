@@ -1,7 +1,7 @@
-# Stratosphere v1 Pilot Execution Plan
+# KubeConvert v1 Pilot Execution Plan
 
 ## 1) Pilot Purpose
-Validate that Stratosphere can reliably produce human-approved, deploy-ready migration artifacts for difficult VM-hosted applications without disrupting existing production systems.
+Validate that KubeConvert can reliably produce human-approved, deploy-ready migration artifacts for difficult VM-hosted applications without disrupting existing production systems.
 
 ## 2) Pilot Success Criteria
 - Complete migration bundles generated for 3 pilot workloads.
@@ -88,7 +88,7 @@ Quality:
 Business:
 - Estimated manual effort avoided.
 - Estimated infrastructure right-sizing delta.
-- Estimated per-VM cost comparison (manual baseline vs Stratosphere flat fee).
+- Estimated per-VM cost comparison (manual baseline vs KubeConvert flat fee).
 
 ## 8) Risk Register
 - Access constraints delay discovery.

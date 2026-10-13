@@ -3,7 +3,7 @@ import { mkdtemp, readdir, readFile, rm, mkdir, writeFile, copyFile } from "node
 import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
 import { promisify } from "node:util";
-import { StratosphereError } from "./errors.js";
+import { KubeConvertError } from "./errors.js";
 import type {
   ArtifactBundle,
   RepositoryExportAction,
@@ -31,7 +31,7 @@ const GIT_TIMEOUT_MS = 30_000;
 
 function assertMatches(input: string, pattern: RegExp, field: string, hint: string): void {
   if (pattern.test(input)) return;
-  throw new StratosphereError({
+  throw new KubeConvertError({
     code: "INPUT_INVALID",
     message: `Invalid ${field}: ${input}`,
     hint,
@@ -74,7 +74,7 @@ function validateRepositoryRequest(request: RepositoryExportRequest): void {
 }
 
 function desiredBranchName(request: RepositoryExportRequest): string {
-  return request.branchName ?? "codex/stratosphere-migration";
+  return request.branchName ?? "codex/kubeconvert-migration";
 }
 
 function targetBranchName(request: RepositoryExportRequest): string {
@@ -95,7 +95,7 @@ function resolveExecutionPolicy(request: RepositoryExportRequest): ExecutionPoli
   const requested = !(request.dryRun ?? true);
   const tokenEnvVar = request.executionTokenEnvVar ?? (request.provider === "github" ? "GITHUB_TOKEN" : "GITLAB_TOKEN");
   const token = process.env[tokenEnvVar];
-  const policyEnabled = process.env.STRATOSPHERE_ENABLE_EXPORT_EXECUTION === "true";
+  const policyEnabled = process.env.KUBECONVERT_ENABLE_EXPORT_EXECUTION === "true";
   const reference = `${request.owner}/${request.repository}@${desiredBranchName(request)}`;
 
   if (!requested) {
@@ -175,7 +175,7 @@ async function apiRequest(
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       Accept: "application/json",
-      "User-Agent": "stratosphere-exporter/0.1",
+      "User-Agent": "kubeconvert-exporter/0.1",
     },
     body: body ? JSON.stringify(body) : undefined,
   });
@@ -204,7 +204,7 @@ async function ensureGitHubRepository(request: RepositoryExportRequest, token: s
   const existing = await apiRequest("GET", repoUrl, token);
   if (existing.status === 200) return;
   if (existing.status !== 404) {
-    throw new StratosphereError({
+    throw new KubeConvertError({
       code: "PIPELINE_FAILED",
       message: `GitHub repository lookup failed with status ${existing.status}.`,
       hint: "Verify token scope and API endpoint configuration.",
@@ -224,7 +224,7 @@ async function ensureGitHubRepository(request: RepositoryExportRequest, token: s
   created = await apiRequest("POST", createUserUrl, token, createBody);
   if (created.status === 201) return;
 
-  throw new StratosphereError({
+  throw new KubeConvertError({
     code: "PIPELINE_FAILED",
     message: `GitHub repository create failed with status ${created.status}.`,
     hint: "Ensure OAuth/token has repository create rights in the target owner.",
@@ -239,7 +239,7 @@ async function ensureGitLabProject(request: RepositoryExportRequest, token: stri
   const existing = await apiRequest("GET", lookupUrl, token);
   if (existing.status === 200) return;
   if (existing.status !== 404) {
-    throw new StratosphereError({
+    throw new KubeConvertError({
       code: "PIPELINE_FAILED",
       message: `GitLab project lookup failed with status ${existing.status}.`,
       hint: "Verify token scope and API endpoint configuration.",
@@ -255,7 +255,7 @@ async function ensureGitLabProject(request: RepositoryExportRequest, token: stri
 
   if (created.status === 201) return;
 
-  throw new StratosphereError({
+  throw new KubeConvertError({
     code: "PIPELINE_FAILED",
     message: `GitLab project create failed with status ${created.status}.`,
     hint:
@@ -297,16 +297,16 @@ function remoteUrlWithToken(request: RepositoryExportRequest, token: string): st
 }
 
 async function pushBundleToRepository(bundleDir: string, request: RepositoryExportRequest, token: string): Promise<void> {
-  const workRoot = await mkdtemp(join(tmpdir(), "stratosphere-export-"));
+  const workRoot = await mkdtemp(join(tmpdir(), "kubeconvert-export-"));
   try {
     const repoDir = join(workRoot, "repo");
     await copyDirectoryRecursive(bundleDir, repoDir);
     await gitExec(["init"], repoDir);
-    await gitExec(["config", "user.name", request.commitAuthorName ?? "stratosphere-bot"], repoDir);
-    await gitExec(["config", "user.email", request.commitAuthorEmail ?? "stratosphere-bot@local"], repoDir);
+    await gitExec(["config", "user.name", request.commitAuthorName ?? "kubeconvert-bot"], repoDir);
+    await gitExec(["config", "user.email", request.commitAuthorEmail ?? "kubeconvert-bot@local"], repoDir);
     await gitExec(["checkout", "-b", desiredBranchName(request)], repoDir);
     await gitExec(["add", "."], repoDir);
-    await gitExec(["commit", "-m", "Stratosphere migration bundle"], repoDir);
+    await gitExec(["commit", "-m", "KubeConvert migration bundle"], repoDir);
     await gitExec(["remote", "add", "origin", remoteUrlWithToken(request, token)], repoDir);
     await gitExec(["push", "--set-upstream", "origin", desiredBranchName(request)], repoDir);
   } finally {
@@ -318,17 +318,17 @@ async function openGitHubPullRequest(request: RepositoryExportRequest, token: st
   const apiBase = request.providerApiBaseUrl ?? defaultApiBaseUrl(request);
   const url = `${apiBase}/repos/${encodeURIComponent(request.owner)}/${encodeURIComponent(request.repository)}/pulls`;
   const response = await apiRequest("POST", url, token, {
-    title: "Stratosphere migration bundle",
+    title: "KubeConvert migration bundle",
     head: desiredBranchName(request),
     base: targetBranchName(request),
-    body: "Automated migration bundle generated by Stratosphere.",
+    body: "Automated migration bundle generated by KubeConvert.",
   });
   if (response.status === 201 || response.status === 200) {
     const value = response.json?.html_url;
     return typeof value === "string" ? value : undefined;
   }
   if (response.status === 422) return undefined;
-  throw new StratosphereError({
+  throw new KubeConvertError({
     code: "PIPELINE_FAILED",
     message: `GitHub pull request create failed with status ${response.status}.`,
     hint: "Verify target branch, permissions, and repository settings.",
@@ -343,15 +343,15 @@ async function openGitLabMergeRequest(request: RepositoryExportRequest, token: s
   const response = await apiRequest("POST", url, token, {
     source_branch: desiredBranchName(request),
     target_branch: targetBranchName(request),
-    title: "Stratosphere migration bundle",
-    description: "Automated migration bundle generated by Stratosphere.",
+    title: "KubeConvert migration bundle",
+    description: "Automated migration bundle generated by KubeConvert.",
   });
   if (response.status === 201 || response.status === 200) {
     const value = response.json?.web_url;
     return typeof value === "string" ? value : undefined;
   }
   if (response.status === 409) return undefined;
-  throw new StratosphereError({
+  throw new KubeConvertError({
     code: "PIPELINE_FAILED",
     message: `GitLab merge request create failed with status ${response.status}.`,
     hint: "Verify target branch, permissions, and project settings.",

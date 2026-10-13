@@ -7,7 +7,7 @@ import {
   type BusinessIntake,
   type MigrationStrategy,
   type WorkspaceAssetType,
-} from "@stratosphere/engine";
+} from "@kubeconvert/engine";
 
 type GuidedIntakeResult = {
   intake: BusinessIntake;
@@ -69,7 +69,7 @@ export async function runGuidedIntakeWizard(): Promise<GuidedIntakeResult> {
   const rl = createInterface({ input, output });
 
   try {
-    output.write("\nStratosphere Guided Intake Wizard\n");
+    output.write("\nKubeConvert Guided Intake Wizard\n");
     output.write("Use plain business answers. You do not need infrastructure expertise.\n\n");
 
     const applicationName = await ask(rl, "Application name");

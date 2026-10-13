@@ -8,18 +8,18 @@
 VERSION=v0.1.0
 ARCH=linux-x64 # use linux-arm64 on arm hosts
 
-curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/stratosphere-${ARCH}"
+curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/kubeconvert-${ARCH}"
 curl -fsSLO "https://github.com/fairley46/stratosphere/releases/download/${VERSION}/SHA256SUMS"
-grep "stratosphere-${ARCH}" SHA256SUMS | sha256sum -c -
+grep "kubeconvert-${ARCH}" SHA256SUMS | sha256sum -c -
 
-chmod +x "stratosphere-${ARCH}"
-mv "stratosphere-${ARCH}" stratosphere
+chmod +x "kubeconvert-${ARCH}"
+mv "kubeconvert-${ARCH}" kubeconvert
 ```
 
 ## 2) Run host prerequisites check
 
 ```bash
-./stratosphere doctor
+./kubeconvert doctor
 ```
 
 What `doctor` checks:
@@ -30,10 +30,10 @@ What `doctor` checks:
 
 If required commands are missing, install packages and rerun `doctor`.
 
-## 3) Start Stratosphere MCP server on the VM
+## 3) Start KubeConvert MCP server on the VM
 
 ```bash
-./stratosphere mcp
+./kubeconvert mcp
 ```
 
 Register this process as a local stdio MCP server in your agent host (Opencode, Claude Desktop, or equivalent enterprise Copilot shell).
@@ -50,10 +50,10 @@ Typical arguments:
 
 ## Optional: run without an agent host
 
-If you do not have Opencode (or another MCP-compatible agent host) available on the VM, you can run Stratosphere directly:
+If you do not have Opencode (or another MCP-compatible agent host) available on the VM, you can run KubeConvert directly:
 
 ```bash
-./stratosphere --wizard --local-discovery --out-dir artifacts/my-migration
+./kubeconvert --wizard --local-discovery --out-dir artifacts/my-migration
 ```
 
 This uses terminal prompts (not a full-screen TUI) to collect intake/workspace context before generating the bundle.
@@ -74,4 +74,4 @@ Open these files first from the generated bundle:
 - Required approvers sign off before execution-ready state.
 - Platform team performs deployment/cutover from generated artifacts.
 
-Stratosphere v1 remains planning-first: it generates governed artifacts and workflow state; it does not mutate live Kubernetes clusters directly.
+KubeConvert v1 remains planning-first: it generates governed artifacts and workflow state; it does not mutate live Kubernetes clusters directly.

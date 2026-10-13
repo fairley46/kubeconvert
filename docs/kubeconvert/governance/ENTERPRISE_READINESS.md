@@ -1,7 +1,7 @@
 # Enterprise Readiness
 
 ## Objective
-Define what "enterprise-ready" means for Stratosphere so engineering, security, and operations teams can adopt it with clear expectations.
+Define what "enterprise-ready" means for KubeConvert so engineering, security, and operations teams can adopt it with clear expectations.
 
 ## Current Readiness Baseline
 1. Discovery safety:
@@ -19,7 +19,7 @@ Define what "enterprise-ready" means for Stratosphere so engineering, security, 
 1. Principle of least privilege:
    - VM interrogation uses read-only command allowlists.
 2. Explicit export policy gate:
-   - Export execution requires `STRATOSPHERE_ENABLE_EXPORT_EXECUTION=true` and token env configuration.
+   - Export execution requires `KUBECONVERT_ENABLE_EXPORT_EXECUTION=true` and token env configuration.
 3. Human sign-off before mutation:
    - Workflow must pass review + approvals + preflight prior to execute states.
 4. Vendor-owned advisory mode:

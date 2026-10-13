@@ -10,7 +10,7 @@ npm run test
 
 ## Commit Guidelines
 
-- Keep changes scoped to Stratosphere only.
+- Keep changes scoped to KubeConvert only.
 - Include tests for any behavior change in `packages/engine`.
 - Keep generated artifacts out of git.
 
@@ -18,4 +18,4 @@ npm run test
 
 - Link the feature or issue being addressed.
 - Include test evidence (`npm run test` output).
-- For migration behavior changes, include a before/after example from `fixtures/stratosphere`.
+- For migration behavior changes, include a before/after example from `fixtures/kubeconvert`.

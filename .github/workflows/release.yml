@@ -32,6 +32,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release/stratosphere-linux-x64
-            release/stratosphere-linux-arm64
+            release/kubeconvert-linux-x64
+            release/kubeconvert-linux-arm64
             release/SHA256SUMS

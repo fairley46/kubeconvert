@@ -1,9 +1,9 @@
-# Stratosphere v1 PRD
+# KubeConvert v1 PRD
 
-*Product requirements, scope boundaries, and success criteria for the Stratosphere v1 release.*
+*Product requirements, scope boundaries, and success criteria for the KubeConvert v1 release.*
 
 ## 1) Product Summary
-Stratosphere is an AI-driven migration architect that interrogates running virtual machines over SSH, optionally inspects source code, and produces deploy-ready Kubernetes migration artifacts. v1 focuses on human-reviewed artifact generation, not automated production cutover.
+KubeConvert is an AI-driven migration architect that interrogates running virtual machines over SSH, optionally inspects source code, and produces deploy-ready Kubernetes migration artifacts. v1 focuses on human-reviewed artifact generation, not automated production cutover.
 
 ## 2) Problem Statement
 Enterprise teams still run high-risk, high-cost monoliths on Rocky Linux and RHEL VMs. Manual migration requires long discovery cycles, brittle assumptions, and inconsistent infrastructure artifacts. Most "lift-and-shift" tools preserve technical debt rather than eliminating it.
@@ -67,7 +67,7 @@ Enterprise teams still run high-risk, high-cost monoliths on Rocky Linux and RHE
 
 ## 10) Business Model (v1)
 - Pricing: flat per-VM fee.
-- Sales support: include side-by-side comparison of estimated manual migration effort/cost vs Stratosphere output model.
+- Sales support: include side-by-side comparison of estimated manual migration effort/cost vs KubeConvert output model.
 
 ## 11) Success Metrics
 - 70%+ of generated artifacts accepted with only minor edits.
@@ -84,4 +84,4 @@ Enterprise teams still run high-risk, high-cost monoliths on Rocky Linux and RHE
   Mitigation: conservative defaults and mandatory reviewer confirmation.
 
 ## 13) Release Gate
-Stratosphere v1 is release-ready when pilot workloads across three enterprise profiles produce complete, validated, human-approved artifact bundles without source VM disruption.
+KubeConvert v1 is release-ready when pilot workloads across three enterprise profiles produce complete, validated, human-approved artifact bundles without source VM disruption.

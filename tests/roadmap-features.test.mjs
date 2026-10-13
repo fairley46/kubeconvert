@@ -108,7 +108,7 @@ test("glossary pack renders plain-language terms", () => {
   const glossary = buildGlossaryPack();
   assert.ok(glossary.entries.length > 0);
   const markdown = renderGlossaryMarkdown(glossary);
-  assert.ok(markdown.includes("Stratosphere Glossary"));
+  assert.ok(markdown.includes("KubeConvert Glossary"));
   assert.ok(markdown.includes("Blue/Green Migration"));
 });
 

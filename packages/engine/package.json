@@ -1,5 +1,5 @@
 {
-  "name": "@stratosphere/engine",
+  "name": "@kubeconvert/engine",
   "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "@stratosphere/cli",
+  "name": "@kubeconvert/cli",
   "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
     "run": "npm run build && node dist/cli.js"
   },
   "dependencies": {
-    "@stratosphere/engine": "0.1.0"
+    "@kubeconvert/engine": "0.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.13.10"

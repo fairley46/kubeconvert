@@ -1,34 +1,34 @@
-# Stratosphere Quickstart
+# KubeConvert Quickstart
 
-*For engineers getting Stratosphere running in under 10 minutes.*
+*For engineers getting KubeConvert running in under 10 minutes.*
 
-If you are running from source checkout and do not have the release binary on your `PATH`, replace `stratosphere` below with `npm run stratosphere --`.
+If you are running from source checkout and do not have the release binary on your `PATH`, replace `kubeconvert` below with `npm run kubeconvert --`.
 
 ## Single binary commands (recommended on VMs)
 
 ```bash
-stratosphere doctor
-stratosphere --help
-stratosphere mcp
+kubeconvert doctor
+kubeconvert --help
+kubeconvert mcp
 ```
 
 For SSH-first install details, see `ON_BOX_QUICKSTART.md`.
 
 ## Generate a migration package from a runtime snapshot
 
-From the `stratosphere/` directory:
+From the `kubeconvert/` directory:
 
 ```bash
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
-  --out-dir artifacts/stratosphere
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Generate with audit and export planning
 
 ```bash
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --initiated-by platform-team \
   --signoff-required-approvers 2 \
   --export-provider github \
@@ -39,14 +39,14 @@ stratosphere \
 ## Request export execution (policy-gated)
 
 ```bash
-STRATOSPHERE_ENABLE_EXPORT_EXECUTION=true GITHUB_TOKEN=*** \
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
+KUBECONVERT_ENABLE_EXPORT_EXECUTION=true GITHUB_TOKEN=*** \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --export-provider github \
   --export-owner my-org \
   --export-repo billing-migration \
   --export-auth-mode oauth \
-  --export-branch codex/stratosphere-migration \
+  --export-branch codex/kubeconvert-migration \
   --export-target-branch main \
   --export-token-env GITHUB_TOKEN \
   --export-api-base-url https://api.github.com \
@@ -57,31 +57,31 @@ stratosphere \
 ## Run guided intake wizard (plain language)
 
 ```bash
-stratosphere \
+kubeconvert \
   --wizard \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
-  --out-dir artifacts/stratosphere
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Generate with business intake + application workspace context
 
 ```bash
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --strategy balanced \
-  --intake-file fixtures/stratosphere/sample-intake.json \
-  --workspace-file fixtures/stratosphere/sample-workspace.json \
-  --out-dir artifacts/stratosphere
+  --intake-file fixtures/kubeconvert/sample-intake.json \
+  --workspace-file fixtures/kubeconvert/sample-workspace.json \
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Generate from local VM discovery (no runtime file)
 
 ```bash
-stratosphere \
+kubeconvert \
   --local-discovery \
   --initiated-by platform-team \
   --signoff-required-approvers 2 \
-  --out-dir artifacts/stratosphere
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Input validation behavior
@@ -93,29 +93,29 @@ stratosphere \
 ## Optional: include SSH connection metadata
 
 ```bash
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
+kubeconvert \
+  --runtime-file fixtures/kubeconvert/sample-runtime.json \
   --ssh-host 10.40.8.23 \
   --ssh-user migration-readonly \
   --ssh-port 22 \
-  --out-dir artifacts/stratosphere
+  --out-dir artifacts/kubeconvert
 ```
 
 ## Print read-only SSH discovery command set
 
 ```bash
-stratosphere --print-ssh-commands
+kubeconvert --print-ssh-commands
 ```
 
 ## Start MCP server
 
 ```bash
-stratosphere mcp
+kubeconvert mcp
 ```
 
 ## MCP local-VM flow
 
-Use MCP tool `generate_local_vm_bundle` when Stratosphere MCP is running on the target VM.
+Use MCP tool `generate_local_vm_bundle` when KubeConvert MCP is running on the target VM.
 
 ## Run tests
 
