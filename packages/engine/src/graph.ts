@@ -7,13 +7,10 @@ import type {
   ScheduledJob,
   VmDnaGraph,
 } from "./types.js";
+import { collapseAlnumRuns } from "./slug.js";
 
 function slug(input: string): string {
-  return input
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 64);
+  return collapseAlnumRuns(input, "-").slice(0, 64);
 }
 
 function processId(process: RuntimeProcess): string {

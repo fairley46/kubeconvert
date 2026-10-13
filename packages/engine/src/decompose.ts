@@ -8,6 +8,7 @@ import type {
   WorkloadKind,
   WorkloadRecommendation,
 } from "./types.js";
+import { collapseAlnumRuns } from "./slug.js";
 
 const PERSISTENT_PATH_HINTS = ["/var/lib", "/data", "/mnt", "/srv", "/opt/data"];
 
@@ -55,7 +56,7 @@ export function detectSecrets(processes: RuntimeProcess[]): SecretReference[] {
 }
 
 function toComponentId(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return collapseAlnumRuns(name, "-");
 }
 
 function aggregateResources(processes: RuntimeProcess[]): ResourceRecommendation {

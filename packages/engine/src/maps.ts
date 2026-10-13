@@ -7,9 +7,10 @@ import type {
   VmDnaGraph,
   WorkloadRecommendation,
 } from "./types.js";
+import { collapseAlnumRuns } from "./slug.js";
 
 function mermaidId(raw: string): string {
-  return raw.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 64) || "node";
+  return collapseAlnumRuns(raw, "_").slice(0, 64) || "node";
 }
 
 function escLabel(value: string): string {

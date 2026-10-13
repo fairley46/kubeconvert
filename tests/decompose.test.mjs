@@ -77,3 +77,43 @@ test("decomposeRuntime classifies CronJob and StatefulSet correctly", () => {
   assert.equal(byName.get("billing-api")?.stack, "java-spring");
   assert.equal(byName.get("invoice-worker")?.stack, "dotnet");
 });
+
+function namedProcess(pid, name) {
+  return {
+    pid,
+    name,
+    command: "node index.js",
+    user: "app",
+    cpuPercent: 1,
+    memoryMb: 128,
+    listeningPorts: [],
+    fileWrites: [],
+    envHints: {},
+  };
+}
+
+test("decomposeRuntime collapses component ids without slicing", () => {
+  const discovery = buildDiscovery([
+    namedProcess(1, "Foo---Bar!!!"),
+    namedProcess(2, "---Foo---Bar---"),
+    namedProcess(3, "---"),
+    namedProcess(4, "A".repeat(70)),
+  ]);
+  const byName = new Map(decomposeRuntime(discovery).recommendations.map((item) => [item.componentName, item]));
+
+  assert.equal(byName.get("Foo---Bar!!!")?.componentId, "foo-bar");
+  assert.equal(byName.get("Foo---Bar!!!")?.imageTag, "foo-bar:latest");
+  assert.equal(byName.get("---Foo---Bar---")?.componentId, "foo-bar");
+  assert.equal(byName.get("---")?.componentId, "");
+  assert.equal(byName.get("A".repeat(70))?.componentId, "a".repeat(70));
+});
+
+test("decomposeRuntime ids a long non-prefix separator run within 500ms", () => {
+  const name = `a${"-".repeat(80_000)}b`;
+  const start = performance.now();
+  const result = decomposeRuntime(buildDiscovery([namedProcess(1, name)]));
+  const elapsed = performance.now() - start;
+  assert.equal(result.recommendations[0]?.componentId, "a-b");
+  assert.equal(result.recommendations[0]?.imageTag, "a-b:latest");
+  assert.ok(elapsed < 500, `component id elapsed ${elapsed}ms`);
+});
