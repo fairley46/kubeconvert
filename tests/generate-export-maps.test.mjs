@@ -153,7 +153,7 @@ test("buildApplicationMaps and exportBundle write expected map and signoff outpu
   assert.equal(maps.futureState.summary.byKind.CronJob, 1);
 
   const bundle = generateArtifacts("mig-2", discovery, decomposition);
-  const outDir = mkdtempSync(join(tmpdir(), "stratosphere-export-"));
+  const outDir = mkdtempSync(join(tmpdir(), "cubeconvert-export-"));
   const validation = { findings: [], readyForHumanReview: true, requiresHumanSignoff: true };
   const audit = {
     runId: "run-1",
@@ -172,7 +172,7 @@ test("buildApplicationMaps and exportBundle write expected map and signoff outpu
   assert.ok(readFileSync(join(outDir, "reports/blue-green-runbook.md"), "utf8").includes("Rollback"));
   assert.ok(readFileSync(join(outDir, "reports/cutover-plan.md"), "utf8").includes("Blue/Green Cutover Plan"));
   assert.ok(readFileSync(join(outDir, "reports/business-impact.md"), "utf8").includes("Business Impact"));
-  assert.ok(readFileSync(join(outDir, "reports/glossary.md"), "utf8").includes("Stratosphere Glossary"));
+  assert.ok(readFileSync(join(outDir, "reports/glossary.md"), "utf8").includes("CubeConvert Glossary"));
   assert.ok(readFileSync(join(outDir, "reports/runtime-profile-window.md"), "utf8").includes("Runtime Window Profile"));
   assert.throws(() => readFileSync(join(outDir, "reports/repository-export.json"), "utf8"));
 

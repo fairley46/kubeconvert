@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
-  StratosphereError,
+  CubeConvertError,
   diffPlanRevisions,
   initExecutionWorkflow,
   loadExecutionJob,
@@ -31,11 +31,11 @@ import {
   type BusinessIntake,
   type RuntimeSnapshot,
   type VmConnection,
-} from "@stratosphere/engine";
+} from "@cubeconvert/engine";
 import { z } from "zod";
 
 const server = new McpServer({
-  name: "stratosphere",
+  name: "cubeconvert",
   version: "0.2.0",
 });
 
@@ -49,7 +49,7 @@ function loadJsonFile(filePath: string, label: string): unknown {
   try {
     payload = readFileSync(filePath, "utf8");
   } catch (error) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "FILE_READ_FAILED",
       message: `Unable to read ${label} file: ${filePath}`,
       hint: "Check that the file exists and is readable by the MCP process.",
@@ -60,7 +60,7 @@ function loadJsonFile(filePath: string, label: string): unknown {
   try {
     return JSON.parse(payload) as unknown;
   } catch (error) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "JSON_PARSE_FAILED",
       message: `Invalid JSON in ${label} file: ${filePath}`,
       hint: "Fix JSON syntax and ensure runtime snapshot schema fields exist.",
@@ -76,7 +76,7 @@ function buildConnection(
   sshKey?: string
 ): VmConnection | undefined {
   if ((sshHost && !sshUser) || (!sshHost && sshUser)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_MISSING",
       message: "ssh_host and ssh_user must be provided together.",
       hint: "Provide both ssh_host and ssh_user, or remove both when using snapshot/local discovery.",
@@ -86,21 +86,21 @@ function buildConnection(
 
   if (!sshHost || !sshUser) return undefined;
   if (!/^[a-zA-Z0-9_.:-]{1,255}$/.test(sshHost)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "ssh_host contains unsupported characters.",
       hint: "Use hostname/IP-safe characters only.",
     });
   }
   if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(sshUser)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "ssh_user contains unsupported characters.",
       hint: "Use username-safe characters only.",
     });
   }
   if (sshKey && !/^[a-zA-Z0-9_./\-~]+$/.test(sshKey)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "ssh_key contains unsupported characters.",
       hint: "Use a local file path with safe path characters.",
@@ -129,7 +129,7 @@ function buildExportRequest(
 ): RepositoryExportRequest | undefined {
   if (!provider) return undefined;
   if (!owner || !repository) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_MISSING",
       message: "export_owner and export_repo are required when export_provider is provided.",
       hint: "Provide both export_owner and export_repo when using export_provider.",
@@ -137,35 +137,35 @@ function buildExportRequest(
     });
   }
   if (!/^[a-zA-Z0-9_.\-/]{1,128}$/.test(owner)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "export_owner contains unsupported characters.",
       hint: "Use letters, numbers, dash, underscore, dot, slash.",
     });
   }
   if (!/^[a-zA-Z0-9_.-]{1,128}$/.test(repository)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "export_repo contains unsupported characters.",
       hint: "Use letters, numbers, dash, underscore, dot.",
     });
   }
   if (branchName && !/^[a-zA-Z0-9_./-]{1,255}$/.test(branchName)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "export_branch contains unsupported characters.",
       hint: "Use branch-safe characters only.",
     });
   }
   if (targetBranch && !/^[a-zA-Z0-9_./-]{1,255}$/.test(targetBranch)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "export_target_branch contains unsupported characters.",
       hint: "Use branch-safe characters only.",
     });
   }
   if (executionTokenEnvVar && !/^[A-Z_][A-Z0-9_]{1,127}$/.test(executionTokenEnvVar)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "export_token_env contains unsupported format.",
       hint: "Use uppercase env var format, for example GITHUB_TOKEN.",
@@ -176,7 +176,7 @@ function buildExportRequest(
       const parsed = new URL(providerApiBaseUrl);
       if (parsed.protocol !== "https:") throw new Error("not-https");
     } catch {
-      throw new StratosphereError({
+      throw new CubeConvertError({
         code: "INPUT_INVALID",
         message: "export_api_base_url must be a valid HTTPS URL.",
         hint: "Use a valid HTTPS API base URL for enterprise host configuration.",
@@ -188,7 +188,7 @@ function buildExportRequest(
       const parsed = new URL(providerWebBaseUrl);
       if (parsed.protocol !== "https:") throw new Error("not-https");
     } catch {
-      throw new StratosphereError({
+      throw new CubeConvertError({
         code: "INPUT_INVALID",
         message: "export_web_base_url must be a valid HTTPS URL.",
         hint: "Use a valid HTTPS web base URL for git remote configuration.",
@@ -214,7 +214,7 @@ function buildExportRequest(
 function validateSignoffApprovers(value?: number): number | undefined {
   if (value === undefined) return undefined;
   if (value < 1) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "signoff_required_approvers must be >= 1.",
       hint: "Use 1 or higher.",
@@ -268,14 +268,14 @@ function loadWorkspace(filePath?: string): ApplicationWorkspace | undefined {
 
 server.tool(
   "generate_migration_bundle",
-  "Generate a Stratosphere migration bundle from runtime snapshot input, SSH interrogation, or local VM discovery.",
+  "Generate a CubeConvert migration bundle from runtime snapshot input, SSH interrogation, or local VM discovery.",
   {
     runtime_file: z.string().optional().describe("Optional path to runtime snapshot JSON"),
     intake_file: z.string().optional().describe("Optional path to business intake JSON"),
     workspace_file: z.string().optional().describe("Optional path to application workspace JSON"),
     strategy: z.enum(["minimal-change", "balanced", "aggressive-modernization"]).optional().describe("Migration strategy profile"),
     local_discovery: z.boolean().optional().describe("Run read-only discovery directly on the host running this MCP server"),
-    out_dir: z.string().default("artifacts/stratosphere").describe("Output directory for generated bundle"),
+    out_dir: z.string().default("artifacts/cubeconvert").describe("Output directory for generated bundle"),
     migration_id: z.string().optional().describe("Optional migration id override"),
     initiated_by: z.string().optional().describe("Operator name for audit trail"),
     signoff_required_approvers: z.number().optional().describe("Required number of approvers for sign-off"),
@@ -336,7 +336,7 @@ server.tool(
       const signoffRequiredApprovers = validateSignoffApprovers(signoff_required_approvers);
 
       if (local_discovery && (ssh_host || ssh_user || ssh_port || ssh_key)) {
-        throw new StratosphereError({
+        throw new CubeConvertError({
           code: "INPUT_CONFLICT",
           message: "local_discovery cannot be combined with ssh_host/ssh_user/ssh_port/ssh_key.",
           hint: "Use local_discovery alone or remove it and provide full SSH connection inputs.",
@@ -344,7 +344,7 @@ server.tool(
       }
 
       if (!runtimeSnapshot && discoveryMode === "snapshot") {
-        throw new StratosphereError({
+        throw new CubeConvertError({
           code: "INPUT_MISSING",
           message: "runtime_file is required unless local_discovery is true or ssh_host/ssh_user are provided.",
           hint: "Provide runtime_file, or set local_discovery=true, or provide ssh_host/ssh_user.",
@@ -430,7 +430,7 @@ server.tool(
 
 server.tool(
   "list_ssh_discovery_commands",
-  "List the read-only SSH command allowlist used for Stratosphere VM interrogation.",
+  "List the read-only SSH command allowlist used for CubeConvert VM interrogation.",
   {},
   async () => ({
     content: [
@@ -446,7 +446,7 @@ server.tool(
   "generate_local_vm_bundle",
   "Generate a migration bundle by running read-only discovery on the same VM that hosts this MCP server.",
   {
-    out_dir: z.string().default("artifacts/stratosphere").describe("Output directory for generated bundle"),
+    out_dir: z.string().default("artifacts/cubeconvert").describe("Output directory for generated bundle"),
     migration_id: z.string().optional().describe("Optional migration id override"),
     runtime_file: z.string().optional().describe("Optional runtime snapshot fallback file"),
     intake_file: z.string().optional().describe("Optional path to business intake JSON"),
@@ -812,7 +812,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const payload = toErrorPayload(error);
     const user = toUserFacingError(error, { operation: "MCP_SERVER_START" });
     const details = sanitizeErrorDetails(payload.details);
-    console.error("Stratosphere MCP server failed to start.");
+    console.error("CubeConvert MCP server failed to start.");
     console.error(`Issue: ${user.title}`);
     console.error(`Code: ${payload.code}`);
     console.error(`What happened: ${user.message}`);

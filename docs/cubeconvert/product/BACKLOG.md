@@ -1,6 +1,6 @@
 # Backlog
 
-This file is intentionally short: it lists what remains to make Stratosphere easier to adopt in real enterprises, without duplicating the README.
+This file is intentionally short: it lists what remains to make CubeConvert easier to adopt in real enterprises, without duplicating the README.
 
 ---
 
@@ -27,7 +27,7 @@ This file is intentionally short: it lists what remains to make Stratosphere eas
 ## P0: Next Work (Adoption Blockers)
 
 - Pilot validation against real enterprise workloads (see `PILOT_EXECUTION_PLAN.md`).
-- Tighten docs and UX around "what Stratosphere can guarantee vs what it infers" (confidence + unknowns).
+- Tighten docs and UX around "what CubeConvert can guarantee vs what it infers" (confidence + unknowns).
 - Export hardening for enterprise tenants:
   - token scope/SSO guidance and better preflight checks
   - clearer safe defaults for self-hosted GitHub/GitLab base URLs

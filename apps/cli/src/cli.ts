@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { basename, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  StratosphereError,
+  CubeConvertError,
   getSshDiscoveryCommandSet,
   runMigrationPipeline,
   sanitizeErrorDetails,
@@ -19,7 +19,7 @@ import {
   type RepositoryExportRequest,
   type RuntimeSnapshot,
   type VmConnection,
-} from "@stratosphere/engine";
+} from "@cubeconvert/engine";
 import { runGuidedIntakeWizard } from "./wizard.js";
 
 type ArgMap = Record<string, string | boolean>;
@@ -31,7 +31,7 @@ function parseArgs(argv: string[]): ArgMap {
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
     if (!token.startsWith("--")) {
-      throw new StratosphereError({
+      throw new CubeConvertError({
         code: "INPUT_INVALID",
         message: `Unexpected positional argument: ${token}`,
         hint: "Use --help to view supported flags.",
@@ -58,7 +58,7 @@ function getString(args: ArgMap, key: string, fallback?: string): string {
   if (typeof value === "string") return value;
   if (fallback !== undefined) return fallback;
 
-  throw new StratosphereError({
+  throw new CubeConvertError({
     code: "INPUT_MISSING",
     message: `Missing required argument --${key}`,
     hint: "Provide the required flag and try again.",
@@ -74,7 +74,7 @@ function getOptionalString(args: ArgMap, key: string): string | undefined {
 
 function assertMatches(value: string, pattern: RegExp, message: string, hint: string): void {
   if (pattern.test(value)) return;
-  throw new StratosphereError({
+  throw new CubeConvertError({
     code: "INPUT_INVALID",
     message,
     hint,
@@ -95,7 +95,7 @@ function getOptionalNumber(args: ArgMap, key: string): number | undefined {
 
   const parsed = Number.parseInt(raw, 10);
   if (Number.isNaN(parsed)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: `Invalid numeric argument for --${key}: ${raw}`,
       hint: "Provide an integer value.",
@@ -116,7 +116,7 @@ function loadJsonFile(filePath: string, label: string): unknown {
   try {
     raw = readFileSync(filePath, "utf8");
   } catch (error) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "FILE_READ_FAILED",
       message: `Unable to read ${label} file: ${filePath}`,
       hint: "Check that the file exists and is readable.",
@@ -127,7 +127,7 @@ function loadJsonFile(filePath: string, label: string): unknown {
   try {
     return JSON.parse(raw) as unknown;
   } catch (error) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "JSON_PARSE_FAILED",
       message: `Invalid JSON in ${label} file: ${filePath}`,
       hint: "Validate JSON syntax and required fields.",
@@ -141,7 +141,7 @@ function parseConnection(args: ArgMap): VmConnection | undefined {
   const user = getOptionalString(args, "ssh-user");
 
   if ((host && !user) || (!host && user)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_MISSING",
       message: "SSH mode requires both --ssh-host and --ssh-user.",
       hint: "Provide both flags or remove both to use snapshot/local mode.",
@@ -178,7 +178,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
   const repository = getOptionalString(args, "export-repo");
 
   if (!provider && (owner || repository)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_MISSING",
       message: "--export-owner/--export-repo require --export-provider.",
       hint: "Add --export-provider github|gitlab or remove export owner/repo flags.",
@@ -188,7 +188,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
   if (!provider) return undefined;
 
   if (provider !== "github" && provider !== "gitlab") {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: `Unsupported export provider: ${provider}`,
       hint: "Use --export-provider github or --export-provider gitlab.",
@@ -196,7 +196,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
   }
 
   if (!owner || !repository) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_MISSING",
       message: "Export provider requires --export-owner and --export-repo.",
       hint: "Provide owner and repository name for export planning.",
@@ -218,7 +218,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
 
   const visibility = getOptionalString(args, "export-visibility");
   if (visibility && visibility !== "private" && visibility !== "internal" && visibility !== "public") {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: `Invalid export visibility: ${visibility}`,
       hint: "Use one of: private, internal, public.",
@@ -254,7 +254,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
   }
   const authModeRaw = getOptionalString(args, "export-auth-mode");
   if (authModeRaw && authModeRaw !== "token" && authModeRaw !== "oauth") {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: `Invalid --export-auth-mode value: ${authModeRaw}`,
       hint: "Use token or oauth.",
@@ -268,7 +268,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
         throw new Error("not-https");
       }
     } catch {
-      throw new StratosphereError({
+      throw new CubeConvertError({
         code: "INPUT_INVALID",
         message: "Invalid --export-api-base-url value.",
         hint: "Use a valid HTTPS URL.",
@@ -283,7 +283,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
         throw new Error("not-https");
       }
     } catch {
-      throw new StratosphereError({
+      throw new CubeConvertError({
         code: "INPUT_INVALID",
         message: "Invalid --export-web-base-url value.",
         hint: "Use a valid HTTPS URL.",
@@ -309,7 +309,7 @@ function parseExportRequest(args: ArgMap): RepositoryExportRequest | undefined {
 function validateSignoffApprovers(value: number | undefined): number | undefined {
   if (value === undefined) return undefined;
   if (value < 1) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: "--signoff-required-approvers must be >= 1.",
       hint: "Use 1 or higher.",
@@ -323,7 +323,7 @@ function resolveDiscoveryMode(args: ArgMap, connection: VmConnection | undefined
   const localDiscovery = getBool(args, "local-discovery");
 
   if (localDiscovery && connection) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_CONFLICT",
       message: "--local-discovery cannot be combined with SSH connection flags.",
       hint: "Choose either local discovery or SSH discovery for this run.",
@@ -341,7 +341,7 @@ function parseStrategy(args: ArgMap): MigrationStrategy | undefined {
   if (strategy === "minimal-change" || strategy === "balanced" || strategy === "aggressive-modernization") {
     return strategy;
   }
-  throw new StratosphereError({
+  throw new CubeConvertError({
     code: "INPUT_INVALID",
     message: `Invalid --strategy value: ${strategy}`,
     hint: "Use one of: minimal-change, balanced, aggressive-modernization.",
@@ -359,7 +359,7 @@ async function buildRequest(args: ArgMap): Promise<MigrationRunRequest> {
   const intakeFileRaw = getOptionalString(args, "intake-file");
   const workspaceFileRaw = getOptionalString(args, "workspace-file");
   if (wizard && (intakeFileRaw || workspaceFileRaw)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_CONFLICT",
       message: "--wizard cannot be combined with --intake-file or --workspace-file.",
       hint: "Use either the guided wizard or file-based intake/workspace inputs.",
@@ -373,7 +373,7 @@ async function buildRequest(args: ArgMap): Promise<MigrationRunRequest> {
     ?? (workspaceFile ? validateApplicationWorkspace(loadJsonFile(workspaceFile, "workspace")) : undefined);
 
   if (!runtimeSnapshot && discoveryMode === "snapshot") {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_MISSING",
       message: "Snapshot mode requires --runtime-file.",
       hint: "Provide --runtime-file or use --local-discovery / SSH mode.",
@@ -391,7 +391,7 @@ async function buildRequest(args: ArgMap): Promise<MigrationRunRequest> {
   return {
     migrationId: getString(args, "migration-id", defaultMigrationId),
     runtimeSnapshot,
-    outDir: resolve(INVOKE_CWD, getString(args, "out-dir", "artifacts/stratosphere")),
+    outDir: resolve(INVOKE_CWD, getString(args, "out-dir", "artifacts/cubeconvert")),
     discoveryMode,
     strategy: wizardResult?.strategy ?? parseStrategy(args),
     connection,
@@ -404,12 +404,12 @@ async function buildRequest(args: ArgMap): Promise<MigrationRunRequest> {
 }
 
 function printUsage(): void {
-  console.log(`Stratosphere CLI
+  console.log(`CubeConvert CLI
 
 Usage:
-  stratosphere --runtime-file fixtures/stratosphere/sample-runtime.json [--out-dir artifacts/stratosphere]
-  stratosphere --local-discovery [--out-dir artifacts/stratosphere]
-  stratosphere --ssh-host <host> --ssh-user <user> [--ssh-port <port>] [--out-dir artifacts/stratosphere]
+  cubeconvert --runtime-file fixtures/cubeconvert/sample-runtime.json [--out-dir artifacts/cubeconvert]
+  cubeconvert --local-discovery [--out-dir artifacts/cubeconvert]
+  cubeconvert --ssh-host <host> --ssh-user <user> [--ssh-port <port>] [--out-dir artifacts/cubeconvert]
 
 Optional:
   --migration-id <id>
@@ -429,7 +429,7 @@ Optional:
 function printError(error: unknown): void {
   const payload = toErrorPayload(error);
   const user = toUserFacingError(error, { operation: "CLI_RUN" });
-  console.error("Stratosphere could not complete your request.");
+  console.error("CubeConvert could not complete your request.");
   console.error(`Issue: ${user.title}`);
   console.error(`Code: ${payload.code}`);
   console.error(`What happened: ${user.message}`);

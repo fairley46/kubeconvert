@@ -6,17 +6,17 @@ import { tmpdir } from "node:os";
 import { runMigrationPipeline } from "../packages/engine/dist/orchestrator.js";
 
 const fixture = JSON.parse(
-  readFileSync(new URL("../fixtures/stratosphere/sample-runtime.json", import.meta.url), "utf8")
+  readFileSync(new URL("../fixtures/cubeconvert/sample-runtime.json", import.meta.url), "utf8")
 );
 const intakeFixture = JSON.parse(
-  readFileSync(new URL("../fixtures/stratosphere/sample-intake.json", import.meta.url), "utf8")
+  readFileSync(new URL("../fixtures/cubeconvert/sample-intake.json", import.meta.url), "utf8")
 );
 const workspaceFixture = JSON.parse(
-  readFileSync(new URL("../fixtures/stratosphere/sample-workspace.json", import.meta.url), "utf8")
+  readFileSync(new URL("../fixtures/cubeconvert/sample-workspace.json", import.meta.url), "utf8")
 );
 
 test("runMigrationPipeline writes core reports and export plan", async () => {
-  const outDir = mkdtempSync(join(tmpdir(), "stratosphere-out-"));
+  const outDir = mkdtempSync(join(tmpdir(), "cubeconvert-out-"));
 
   const result = await runMigrationPipeline({
     migrationId: "integration-test",

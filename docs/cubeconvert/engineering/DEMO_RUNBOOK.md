@@ -3,11 +3,11 @@
 *A 12-15 minute walkthrough you can run live, using committed fixtures.*
 
 ## Demo Objective
-Show that Stratosphere can take a legacy VM view, explain the application clearly, and generate a governed migration package that engineers can act on.
+Show that CubeConvert can take a legacy VM view, explain the application clearly, and generate a governed migration package that engineers can act on.
 
 ## Demo Setup
 ```bash
-cd /path/to/stratosphere
+cd /path/to/cubeconvert
 npm install
 npm run build
 ```
@@ -18,7 +18,7 @@ npm run build
 ```bash
 npm run demo
 ```
-Output: `artifacts/stratosphere-demo/`
+Output: `artifacts/cubeconvert-demo/`
 
 ### Option 2: Scenario fixtures (good for Q&A)
 
@@ -28,7 +28,7 @@ If you want to regenerate them, re-run the commands below.
 ### Scenario A: Java Spring Boot monolith
 Rocky Linux 9, Spring Boot + PostgreSQL, Liquibase migrations, stateful uploads, secrets: `DB_PASSWORD`, `JWT_SECRET`, `SMTP_API_KEY`.
 ```bash
-npm run stratosphere -- \
+npm run cubeconvert -- \
   --runtime-file fixtures/scenarios/java-monolith/runtime.json \
   --out-dir fixtures/scenarios/java-monolith/output
 ```
@@ -36,7 +36,7 @@ npm run stratosphere -- \
 ### Scenario B: .NET Line-of-Business (vendor advisory)
 RHEL 8, ASP.NET + SQL Server, Azure Service Bus SDK. **Triggers vendor advisory mode** — Helm/Terraform generated for review only, not immediate deployment.
 ```bash
-npm run stratosphere -- \
+npm run cubeconvert -- \
   --runtime-file fixtures/scenarios/dotnet-lob/runtime.json \
   --out-dir fixtures/scenarios/dotnet-lob/output
 ```
@@ -45,7 +45,7 @@ Expected output: `blockers=2` (Azure Service Bus advisory + advisory-only blocke
 ### Scenario C: Node.js hybrid service
 Ubuntu 22.04, PM2 cluster (4 workers) + background job worker, Redis + MongoDB, secrets: `REDIS_PASSWORD`, `MONGO_URI`, `STRIPE_SECRET_KEY`.
 ```bash
-npm run stratosphere -- \
+npm run cubeconvert -- \
   --runtime-file fixtures/scenarios/nodejs-hybrid/runtime.json \
   --out-dir fixtures/scenarios/nodejs-hybrid/output
 ```

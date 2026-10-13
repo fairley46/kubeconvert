@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
-import { StratosphereError } from "./errors.js";
+import { CubeConvertError } from "./errors.js";
 import type {
   ExecutionApproval,
   ExecutionFeedback,
@@ -21,7 +21,7 @@ function nowIso(): string {
 
 function assertAllowedState(job: ExecutionJob, allowed: ExecutionJob["state"][], action: string): void {
   if (!allowed.includes(job.state)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_CONFLICT",
       message: `Cannot ${action} while job is in state ${job.state}.`,
       hint: `Allowed states: ${allowed.join(", ")}`,
@@ -32,7 +32,7 @@ function assertAllowedState(job: ExecutionJob, allowed: ExecutionJob["state"][],
 
 function ensureBundleDir(bundleDir: string): void {
   if (!existsSync(bundleDir)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "INPUT_INVALID",
       message: `Bundle directory does not exist: ${bundleDir}`,
       hint: "Generate artifacts first, then initialize execution workflow.",
@@ -53,7 +53,7 @@ export function saveExecutionJob(job: ExecutionJob): void {
 export function loadExecutionJob(bundleDir: string): ExecutionJob {
   const filePath = executionJobPath(bundleDir);
   if (!existsSync(filePath)) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "FILE_READ_FAILED",
       message: `Execution workflow file not found: ${filePath}`,
       hint: "Initialize execution workflow first.",
@@ -62,7 +62,7 @@ export function loadExecutionJob(bundleDir: string): ExecutionJob {
   try {
     return JSON.parse(readFileSync(filePath, "utf8")) as ExecutionJob;
   } catch (error) {
-    throw new StratosphereError({
+    throw new CubeConvertError({
       code: "JSON_PARSE_FAILED",
       message: `Invalid execution workflow JSON: ${filePath}`,
       hint: "Regenerate workflow file from migration bundle.",
@@ -222,14 +222,14 @@ export function runExecutionPreflight(input: {
     message: reportsExists ? "Migration summary report found." : "Missing reports/migration-summary.json.",
   });
 
-  const exportPolicyOk = input.requireExportExecution ? process.env.STRATOSPHERE_ENABLE_EXPORT_EXECUTION === "true" : true;
+  const exportPolicyOk = input.requireExportExecution ? process.env.CUBECONVERT_ENABLE_EXPORT_EXECUTION === "true" : true;
   checks.push({
     id: "export-policy",
     title: "Export execution policy",
     passed: exportPolicyOk,
     message: exportPolicyOk
       ? "Export policy check passed."
-      : "Export execution policy disabled. Set STRATOSPHERE_ENABLE_EXPORT_EXECUTION=true when policy is approved.",
+      : "Export execution policy disabled. Set CUBECONVERT_ENABLE_EXPORT_EXECUTION=true when policy is approved.",
   });
 
   // Kubernetes cluster validation: skip with advisory warn when no kubeconfig is set.

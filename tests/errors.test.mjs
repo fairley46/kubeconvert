@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  StratosphereError,
+  CubeConvertError,
   runMigrationPipeline,
   sanitizeErrorDetails,
   toErrorPayload,
   toUserFacingError,
 } from "../packages/engine/dist/index.js";
 
-test("toErrorPayload preserves structured StratosphereError fields", () => {
-  const error = new StratosphereError({
+test("toErrorPayload preserves structured CubeConvertError fields", () => {
+  const error = new CubeConvertError({
     code: "INPUT_INVALID",
     message: "Bad input",
     hint: "Use valid input",
@@ -24,7 +24,7 @@ test("toErrorPayload preserves structured StratosphereError fields", () => {
 });
 
 test("toErrorPayload sanitizes sensitive detail fields and token-like message content", () => {
-  const error = new StratosphereError({
+  const error = new CubeConvertError({
     code: "PIPELINE_FAILED",
     message: "request failed with token=abc123",
     details: {
@@ -63,7 +63,7 @@ test("toErrorPayload handles non-Error throwables", () => {
 
 test("toUserFacingError provides title and next steps for non-technical users", () => {
   const user = toUserFacingError(
-    new StratosphereError({
+    new CubeConvertError({
       code: "INPUT_MISSING",
       message: "runtime_file is required",
     }),
@@ -101,7 +101,7 @@ test("runMigrationPipeline fails with INPUT_MISSING for snapshot mode without ru
     () =>
       runMigrationPipeline({
         migrationId: "invalid-run",
-        outDir: "/tmp/stratosphere-invalid",
+        outDir: "/tmp/cubeconvert-invalid",
         discoveryMode: "snapshot",
       }),
     (error) => {

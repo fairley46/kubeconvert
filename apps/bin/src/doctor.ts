@@ -84,7 +84,7 @@ function printTextReport(results: CheckResult[], outDir: string, writable: { wri
   const missingRequired = results.filter((result) => result.required && !result.available);
   const missingOptional = results.filter((result) => !result.required && !result.available);
 
-  console.log("Stratosphere Doctor");
+  console.log("CubeConvert Doctor");
   console.log("");
   console.log(`Platform: ${process.platform}/${process.arch}`);
   console.log(`Output directory (requested): ${resolve(INVOKE_CWD, outDir)}`);
@@ -109,7 +109,7 @@ function printTextReport(results: CheckResult[], outDir: string, writable: { wri
   console.log(`Missing optional commands: ${missingOptional.length}`);
   if (missingRequired.length > 0) {
     console.log("Doctor status: FAILED");
-    console.log("Next step: install required commands, then rerun `stratosphere doctor`.");
+    console.log("Next step: install required commands, then rerun `cubeconvert doctor`.");
     return;
   }
   if (!writable.writable) {
@@ -122,7 +122,7 @@ function printTextReport(results: CheckResult[], outDir: string, writable: { wri
 
 function parseDoctorArgs(argv: string[]): { json: boolean; outDir: string } {
   let json = false;
-  let outDir = "artifacts/stratosphere";
+  let outDir = "artifacts/cubeconvert";
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -149,7 +149,7 @@ function parseDoctorArgs(argv: string[]): { json: boolean; outDir: string } {
 }
 
 function printDoctorUsage(): void {
-  console.log("Usage: stratosphere doctor [--out-dir <path>] [--json]");
+  console.log("Usage: cubeconvert doctor [--out-dir <path>] [--json]");
 }
 
 export async function runDoctor(argv: string[] = []): Promise<number> {

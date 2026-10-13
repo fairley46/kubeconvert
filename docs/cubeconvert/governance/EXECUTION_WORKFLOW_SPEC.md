@@ -1,12 +1,12 @@
 # Execution Workflow Spec
 
 ## Purpose
-Define how Stratosphere moves from planning outputs to a controlled, human-approved execution *plan* while enforcing review, feedback, and approval gates.
+Define how CubeConvert moves from planning outputs to a controlled, human-approved execution *plan* while enforcing review, feedback, and approval gates.
 
 ## Core Principle
-Stratosphere must pause for human review before any mutating operation.
+CubeConvert must pause for human review before any mutating operation.
 
-In this repo/version, Stratosphere does not perform mutating operations against Kubernetes clusters. It produces a governed execution plan and persists workflow state to the bundle so humans can run the cutover externally.
+In this repo/version, CubeConvert does not perform mutating operations against Kubernetes clusters. It produces a governed execution plan and persists workflow state to the bundle so humans can run the cutover externally.
 
 ## Lifecycle States
 1. `DRAFTING`
@@ -21,7 +21,7 @@ In this repo/version, Stratosphere does not perform mutating operations against 
 
 4. `REVISION_REQUIRED`
 - User provided changes or rejected assumptions.
-- Stratosphere regenerates package and shows delta from previous revision.
+- CubeConvert regenerates package and shows delta from previous revision.
 
 5. `APPROVAL_PENDING`
 - Review accepted.

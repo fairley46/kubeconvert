@@ -11,7 +11,7 @@ import {
 } from "../packages/engine/dist/index.js";
 
 const fixture = JSON.parse(
-  readFileSync(new URL("../fixtures/stratosphere/sample-runtime.json", import.meta.url), "utf8")
+  readFileSync(new URL("../fixtures/cubeconvert/sample-runtime.json", import.meta.url), "utf8")
 );
 
 test("orchestrator internals hash inputs and pick adapters defensively", () => {

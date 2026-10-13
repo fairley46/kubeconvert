@@ -1,34 +1,34 @@
 # Engineer Onboarding
 
 ## Goal
-Get a new engineer productive with Stratosphere in under 30 minutes.
+Get a new engineer productive with CubeConvert in under 30 minutes.
 
-If you are running from source checkout and the `stratosphere` executable is not on your `PATH`, use `npm run stratosphere --` and `npm run mcp:start` equivalents.
+If you are running from source checkout and the `cubeconvert` executable is not on your `PATH`, use `npm run cubeconvert --` and `npm run mcp:start` equivalents.
 
 ## 1) Local Setup
 ```bash
-cd /path/to/stratosphere
+cd /path/to/cubeconvert
 npm install
 npm run build
 ```
 
 ## 2) Run a Full Example
 ```bash
-stratosphere \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
+cubeconvert \
+  --runtime-file fixtures/cubeconvert/sample-runtime.json \
   --strategy balanced \
-  --intake-file fixtures/stratosphere/sample-intake.json \
-  --workspace-file fixtures/stratosphere/sample-workspace.json \
+  --intake-file fixtures/cubeconvert/sample-intake.json \
+  --workspace-file fixtures/cubeconvert/sample-workspace.json \
   --signoff-required-approvers 2 \
-  --out-dir artifacts/stratosphere
+  --out-dir artifacts/cubeconvert
 ```
 
 Optional guided intake (non-technical flow):
 ```bash
-stratosphere \
+cubeconvert \
   --wizard \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
-  --out-dir artifacts/stratosphere
+  --runtime-file fixtures/cubeconvert/sample-runtime.json \
+  --out-dir artifacts/cubeconvert
 ```
 
 ## 3) Validate Quality Gates
@@ -63,7 +63,7 @@ npm run test:coverage
 ## 6) MCP Mode (Agent Access)
 Start the MCP server:
 ```bash
-stratosphere mcp
+cubeconvert mcp
 ```
 
 Primary MCP tools for full flow:
@@ -80,7 +80,7 @@ Primary MCP tools for full flow:
 2. Coverage gate failure:
    - Run `npm run test:coverage` and add branch-targeted tests.
 3. Export execution not allowed:
-   - Confirm `--export-execute` plus `STRATOSPHERE_ENABLE_EXPORT_EXECUTION=true` and token env var.
+   - Confirm `--export-execute` plus `CUBECONVERT_ENABLE_EXPORT_EXECUTION=true` and token env var.
    - For enterprise providers, set `--export-auth-mode oauth` and provider base URLs when needed.
 4. Snapshot mode errors:
    - Ensure `--runtime-file` is present and valid JSON schema.

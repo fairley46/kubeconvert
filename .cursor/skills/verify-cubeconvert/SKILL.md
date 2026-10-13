@@ -1,11 +1,11 @@
 ---
-name: verify-stratosphere
-description: Drive Stratosphere's CLI migration flow with fixtures, doctor the binary, and capture report evidence. Use when verifying Stratosphere behavior, demos, or README claims.
+name: verify-cubeconvert
+description: Drive CubeConvert's CLI migration flow with fixtures, doctor the binary, and capture report evidence. Use when verifying CubeConvert behavior, demos, or README claims.
 ---
 
-# Verify Stratosphere
+# Verify CubeConvert
 
-Primary surface: CLI (`stratosphere` via `npm run stratosphere` or `apps/bin/dist/stratosphere.js`). Secondary: `stratosphere doctor`, `stratosphere mcp` (stdio; needs an MCP host). There is no Web UI.
+Primary surface: CLI (`cubeconvert` via `npm run cubeconvert` or `apps/bin/dist/cubeconvert.js`). Secondary: `cubeconvert doctor`, `cubeconvert mcp` (stdio; needs an MCP host). There is no Web UI.
 
 ## Launch
 
@@ -16,17 +16,17 @@ npm install
 npm run build
 ```
 
-Ready when `apps/bin/dist/stratosphere.js` exists and `node apps/bin/dist/stratosphere.js --help` prints usage.
+Ready when `apps/bin/dist/cubeconvert.js` exists and `node apps/bin/dist/cubeconvert.js --help` prints usage.
 
 For an isolated demo run:
 
 ```bash
-OUT_DIR="$(mktemp -d /tmp/stratosphere-verify-XXXX)"
-npm run stratosphere -- \
-  --runtime-file fixtures/stratosphere/sample-runtime.json \
+OUT_DIR="$(mktemp -d /tmp/cubeconvert-verify-XXXX)"
+npm run cubeconvert -- \
+  --runtime-file fixtures/cubeconvert/sample-runtime.json \
   --strategy balanced \
-  --intake-file fixtures/stratosphere/sample-intake.json \
-  --workspace-file fixtures/stratosphere/sample-workspace.json \
+  --intake-file fixtures/cubeconvert/sample-intake.json \
+  --workspace-file fixtures/cubeconvert/sample-workspace.json \
   --signoff-required-approvers 2 \
   --export-provider github \
   --export-owner acme-enterprise \
@@ -34,16 +34,16 @@ npm run stratosphere -- \
   --out-dir "$OUT_DIR"
 ```
 
-Or `npm run demo` (writes `artifacts/stratosphere-demo/` and `reports/execution-job.json`).
+Or `npm run demo` (writes `artifacts/cubeconvert-demo/` and `reports/execution-job.json`).
 
-Teardown: delete only the out dir you created. Keep proof under `/tmp/stratosphere-proof-*` or `/opt/cursor/artifacts/`.
+Teardown: delete only the out dir you created. Keep proof under `/tmp/cubeconvert-proof-*` or `/opt/cursor/artifacts/`.
 
 ## Doctor
 
 ```bash
-npm run doctor -- --out-dir /tmp/stratosphere-doctor-probe
+npm run doctor -- --out-dir /tmp/cubeconvert-doctor-probe
 # or
-node apps/bin/dist/stratosphere.js doctor --out-dir /tmp/stratosphere-doctor-probe
+node apps/bin/dist/cubeconvert.js doctor --out-dir /tmp/cubeconvert-doctor-probe
 ```
 
 Worth driving when stdout shows `Doctor status: OK` (or documents missing optional tools without failing required ones) and the probe path is writable.
@@ -77,11 +77,11 @@ Automated CI proof: `tests/e2e-cli-billing.test.mjs` (runs in `npm run test`).
 ```bash
 rm -rf "$OUT_DIR"
 # if using demo default:
-rm -rf artifacts/stratosphere-demo
+rm -rf artifacts/cubeconvert-demo
 ```
 
 Never kill by process name. The CLI is short-lived; only remove directories you created.
 
 ## Helpers
 
-Feature map: `.cursor/skills/verify-stratosphere/features/`.
+Feature map: `.cursor/skills/verify-cubeconvert/features/`.

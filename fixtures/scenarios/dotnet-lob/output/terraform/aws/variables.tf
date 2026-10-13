@@ -1,6 +1,6 @@
 variable "namespace" {
   type    = string
-  default = "stratosphere-migration"
+  default = "cubeconvert-migration"
 }
 
 variable "region" {
