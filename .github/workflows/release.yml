@@ -5,6 +5,10 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to build and publish assets for (e.g. v0.1.0)"
+        required: true
 
 jobs:
   build-release:
@@ -35,3 +39,4 @@ jobs:
             release/kubeconvert-linux-x64
             release/kubeconvert-linux-arm64
             release/SHA256SUMS
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
