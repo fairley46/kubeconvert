@@ -117,3 +117,14 @@ test("decomposeRuntime ids a long non-prefix separator run within 500ms", () => 
   assert.equal(result.recommendations[0]?.imageTag, "a-b:latest");
   assert.ok(elapsed < 500, `component id elapsed ${elapsed}ms`);
 });
+
+test("decomposeRuntime scans a long secret-keyword run in a command within 500ms", () => {
+  const command = `${"TOKEN".repeat(20_000)}! PASSWORD=a DB_PASSWORD=b APP_NAME=c`;
+  const start = performance.now();
+  const result = decomposeRuntime(buildDiscovery([{ ...namedProcess(1, "launcher"), command }]));
+  const elapsed = performance.now() - start;
+  assert.deepEqual(result.recommendations[0]?.secrets, [
+    { name: "DB_PASSWORD", envVarName: "DB_PASSWORD", source: "env-pattern", confidence: 0.7 },
+  ]);
+  assert.ok(elapsed < 500, `command secret scan elapsed ${elapsed}ms`);
+});
