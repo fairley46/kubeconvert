@@ -32,11 +32,11 @@ export function detectSecrets(processes: RuntimeProcess[]): SecretReference[] {
       }
     }
 
-    const cmdMatches = proc.command.match(/\b([A-Z][A-Z0-9_]*(PASSWORD|TOKEN|API_KEY|SECRET|CERT|PRIVATE_KEY|AUTH)[A-Z0-9_]*)=/g);
+    const cmdMatches = proc.command.match(/\b[A-Z][A-Z0-9_]*=/g);
     if (cmdMatches) {
       for (const match of cmdMatches) {
         const varName = match.replace(/=$/, "");
-        if (!seen.has(varName)) {
+        if (SECRET_ENV_PATTERNS.some((p) => varName.includes(p, 1)) && !seen.has(varName)) {
           seen.add(varName);
           secrets.push({ name: varName, envVarName: varName, source: "env-pattern", confidence: 0.7 });
         }
